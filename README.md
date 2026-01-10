@@ -4,11 +4,8 @@
 
 The Optimal Uncertainty Quantification (OUQ) algorithm [1] provides a means computing the bounds of the expectations of quantities of interest despite not having complete knowledge of the probability distribution of the uncertain variables. This is achieved by finding the worst/best case distributions in some set $\cal{A}$ of possible distributions given the knowledge available, i.e.,
 
-$$
-\mathrm{infimum}_{\mu \in \cal{A}} ~ \mathbb{E}_\mu\left[g\right] \leq
-\mathbb{E}_{\mu^*}\left[g\right] \leq
-\mathrm{supremum}_{\mu \in \cal{A}} ~ \mathbb{E}_\mu\left[g\right],
-$$
+<img width="680" height="69" alt="image" src="https://github.com/user-attachments/assets/842f61d2-24b3-4377-aabb-cd6a243f3758" />
+
 where $\mu^*$ is the true, but unknown distribution or measure. 
 
 This package implements the OUQ algorithm [1] and its convex [2] and "moment class" [3-4] forms in the Julia programming language. These are implemented using techniques based on *complete* and *rigorous* global methods in order to bound the effects of finite computation on the OUQ bounds [5-8]. 
@@ -17,7 +14,7 @@ Additionally, example usage and benchmarks are provided for a set of problems in
 
 
 # Requirements
-- Julia v1.10, 1.11, 1.12
+- Julia v1.12
 
 
 
