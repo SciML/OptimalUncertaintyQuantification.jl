@@ -1,0 +1,79 @@
+name: "Tests"
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: "Test ${{ matrix.submodule }} on Julia ${{ matrix.version }}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        submodule:
+          - CanonicalMoments
+          - DiscreteMeasures
+          - OUQBase
+        version:
+          - '1.12'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: "Setup Julia ${{ matrix.version }}"
+        uses: julia-actions/setup-julia@v2
+        with:
+          version: "${{ matrix.version }}"
+      
+      - name: Cache Julia artifacts
+        uses: julia-actions/cache@v1
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: "Instantiate workspace and run tests for ${{ matrix.submodule }}"
+        run: |
+          julia --project=. -e '
+            using Pkg
+            Pkg.instantiate()
+            Pkg.test("${{ matrix.submodule }}")
+          '
+
+  upload-manifest:
+    name: "Upload Manifest"
+    runs-on: ubuntu-latest
+    needs: test
+    if: always()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Julia
+        uses: julia-actions/setup-julia@v2
+        with:
+          version: '1'
+
+      - name: Generate Manifest
+        run: |
+          julia --project=. -e '
+            using Pkg
+            Pkg.instantiate()
+          '
+
+      - name: Upload Manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: Manifest
+          path: Manifest.toml

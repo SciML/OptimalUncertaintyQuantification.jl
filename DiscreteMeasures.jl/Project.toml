@@ -1,0 +1,21 @@
+name = "DiscreteMeasures"
+uuid = "7766d772-2108-41ee-a4bd-11c51440a39b"
+authors = ["Adam R. Gerlach"]
+version = "0.1.0"
+
+[weakdeps]
+IntervalArithmetic = "d1acc4aa-44c8-5952-acd4-ba5d80a2a253"
+
+[extensions]
+IntervalArithmeticExt = "IntervalArithmetic"
+
+[compat]
+julia = "1.10"
+IntervalArithmetic = "0.16 - 0.20, =0.20.9"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+IntervalArithmetic = "d1acc4aa-44c8-5952-acd4-ba5d80a2a253"
+
+[targets]
+test = ["Test", "IntervalArithmetic"]

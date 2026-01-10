@@ -1,0 +1,34 @@
+name = "OUQBase"
+uuid = "01930cae-99d2-7439-8f4f-ace2ece9f1b9"
+authors = ["Avinash Subramanian (JuliaHub), Benjamin Chung (JuliaHub), Adam Gerlach (AFRL)"]
+version = "0.1.0"
+
+[deps]
+CanonicalMoments = "58d2c334-1a3c-4862-bb37-9012b9e58a38"
+DiscreteMeasures = "7766d772-2108-41ee-a4bd-11c51440a39b"
+DomainSets = "5b8099bc-c8ec-5219-889f-1d9e522a28bf"
+JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
+ModelingToolkit = "961ee093-0014-501f-94e3-6117800e7a78"
+NaNMath = "77ba4419-2d1f-58cd-9bb1-8ffee604a2e3"
+Optimization = "7f7a1694-90dd-40f0-9382-eb1efda571ba"
+OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
+PolynomialRoots = "3a141323-8675-5d76-9d11-e1df1406c778"
+Polynomials = "f27b6e38-b328-58d1-80ce-0feddd5e7a45"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
+SymbolicUtils = "d1185830-fcd6-423d-90d6-eec64667417b"
+Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
+
+[compat]
+DomainSets = "0.7.15"
+JuMP = "1.23.6"
+ModelingToolkit = "9.69"
+NaNMath = "1.1.3"
+OrderedCollections = "1.7.0"
+Polynomials = "4.0.13"
+Reexport = "1.2.2"
+SciMLBase = "2.89.1"
+Symbolics = "6.39.1"
+
+[workspace]
+projects = ["test"]

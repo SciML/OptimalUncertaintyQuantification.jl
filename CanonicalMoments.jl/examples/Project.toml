@@ -1,0 +1,21 @@
+[deps]
+CanonicalMoments = "58d2c334-1a3c-4862-bb37-9012b9e58a38"
+DiscreteMeasures = "7766d772-2108-41ee-a4bd-11c51440a39b"
+FiniteDiff = "6a86dc24-6348-571c-b903-95158fe2bd41"
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
+IntervalArithmetic = "d1acc4aa-44c8-5952-acd4-ba5d80a2a253"
+IntervalEigenSolvers = "b1676953-d806-42b0-9a94-608273f59156"
+IntervalLinearAlgebra = "92cbe1ac-9c24-436b-b0c9-5f7317aedcd5"
+MakieCore = "20f20a25-4f0e-4fdf-b5d1-57303727442b"
+Optimization = "7f7a1694-90dd-40f0-9382-eb1efda571ba"
+OptimizationOptimJL = "36348300-93cb-4f02-beb5-3c3902f8871e"
+PolynomialRoots = "3a141323-8675-5d76-9d11-e1df1406c778"
+Polynomials = "f27b6e38-b328-58d1-80ce-0feddd5e7a45"
+RealPolynomialRoots = "87be438c-38ae-47c4-9398-763eabe5c3be"
+SpecialMatrices = "928aab9d-ef52-54ac-8ca1-acd7ca42c160"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+
+[sources]
+CanonicalMoments = {path = ".."}
+IntervalEigenSolvers = {path = "../../IntervalEigenSolvers.jl"}
+DiscreteMeasures = {path = "../../DiscreteMeasures.jl"}
