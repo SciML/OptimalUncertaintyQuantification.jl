@@ -21,23 +21,23 @@ c1 = [
 c2 = [
     [1320.42, 2.1632e6], # means and 2nd moments
     [30.0, 949.137],
-    [50.0, 7501/3.0],
-    [54.5, 8911/3.0],
+    [50.0, 7501 / 3.0],
+    [54.5, 8911 / 3.0],
 ]
 
 c3 = [
     [1320.42, 2.1632e6, 4.18e9], # means and 3rd moments
     [30.0, 949.137, 31422.3],
-    [50.0, 7501/3.0, 125050],
-    [54.5, 8911/3.0, 647569/4],
+    [50.0, 7501 / 3.0, 125050],
+    [54.5, 8911 / 3.0, 647569 / 4],
 ]
 
 threshold = 4
 
 setup1 = [
-    (free = [fill(0.5, 2) for _ = 1:length(c1)], res = 0.8346769701),
-    (free = [fill(0.25, 2) for _ = 1:length(c1)], res = 0.8423597615),
-    (free = [fill(0.75, 2) for _ = 1:length(c1)], res = 0.8355977711),
+    (free = [fill(0.5, 2) for _ in 1:length(c1)], res = 0.8346769701),
+    (free = [fill(0.25, 2) for _ in 1:length(c1)], res = 0.8423597615),
+    (free = [fill(0.75, 2) for _ in 1:length(c1)], res = 0.8355977711),
     (
         free = [
             [0.11008426115113379, 0.4913831957970459],
@@ -50,9 +50,9 @@ setup1 = [
 ]
 
 setup2 = [
-    (free = [fill(0.5, 3) for _ = 1:length(c2)], res = 0.9084523325),
-    (free = [fill(0.25, 3) for _ = 1:length(c2)], res = 0.9158574604),
-    (free = [fill(0.75, 3) for _ = 1:length(c2)], res = 0.9429896112),
+    (free = [fill(0.5, 3) for _ in 1:length(c2)], res = 0.9084523325),
+    (free = [fill(0.25, 3) for _ in 1:length(c2)], res = 0.9158574604),
+    (free = [fill(0.75, 3) for _ in 1:length(c2)], res = 0.9429896112),
     (
         free = [
             [0.11008426115113379, 0.4913831957970459, 0.5651453592612876],
@@ -65,9 +65,9 @@ setup2 = [
 ]
 
 setup3 = [
-    (free = [fill(0.5, 4) for _ = 1:length(c3)], res = 0.9385050420),
-    (free = [fill(0.25, 4) for _ = 1:length(c3)], res = 0.9267572769),
-    (free = [fill(0.75, 4) for _ = 1:length(c3)], res = 0.9327169677),
+    (free = [fill(0.5, 4) for _ in 1:length(c3)], res = 0.938505042),
+    (free = [fill(0.25, 4) for _ in 1:length(c3)], res = 0.9267572769),
+    (free = [fill(0.75, 4) for _ in 1:length(c3)], res = 0.9327169677),
     (
         free = [
             [

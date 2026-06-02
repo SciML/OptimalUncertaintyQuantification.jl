@@ -17,8 +17,8 @@ ub = [3580.0, 47.45, 51.0, 55.0]  # upper bounds on random variables
 raws = [
     [1320.42, 2.1632e6, 4.18e9], # Q, 1,2, 3 raw moments
     [30.0, 949.137, 31422.3], #Ks
-    [50.0, 7501/3.0, 125050.0], #Zv
-    [54.5, 8911/3.0, 647569/4.0], #Zm
+    [50.0, 7501 / 3.0, 125050.0], #Zv
+    [54.5, 8911 / 3.0, 647569 / 4.0], #Zm
 ]
 
 raw_seqences = RawMomentSequence.(raws, lb, ub)
@@ -38,7 +38,7 @@ joint_μ = ProductDiscreteMeasure(independent_μs)
 # check raw moments match constraints
 map(enumerate(raws)) do (i, rawsi)
     map(enumerate(rawsi)) do (k, c)
-        expectation(x->x[i]^k, joint_μ) ≈ c
+        expectation(x -> x[i]^k, joint_μ) ≈ c
     end |> all
 end |> all
 
@@ -54,20 +54,20 @@ function objective(x, params)
     independent_μs = map(enumerate(params.transforms)) do (i, t)
         p_free = eltype(x)[]
 
-        for _ = 1:nvars[i]
+        for _ in 1:nvars[i]
             push!(p_free, popfirst!(_x))
         end
         t(p_free; support_alg, weight_alg)
     end
     μ = ProductDiscreteMeasure(independent_μs)
-    expectation(H, μ)
+    return expectation(H, μ)
 end
 
 F = OptimizationFunction(objective, Optimization.AutoForwardDiff())
 
 nvars_part = length.(raws) .+ 1
 nvars = sum(nvars_part)
-u0 = fill(1/2, nvars)
+u0 = fill(1 / 2, nvars)
 params = (; transforms, support_alg, weight_alg, nvars_part)
 prob = OptimizationProblem(F, u0, params, lb = zeros(nvars), ub = ones(nvars))
 @time sol = solve(prob, NelderMead())
@@ -78,7 +78,7 @@ _x = copy(sol.u)
 independent_μs = map(enumerate(params.transforms)) do (i, t)
     p_free = eltype(_x)[]
 
-    for _ = 1:nvars_part[i]
+    for _ in 1:nvars_part[i]
         push!(p_free, popfirst!(_x))
     end
     t(p_free; support_alg, weight_alg)

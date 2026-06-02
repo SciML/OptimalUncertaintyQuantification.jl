@@ -27,19 +27,19 @@ c1 = [
 c2 = [
     [1320.42, 2.1632e6], # means and 2nd moments
     [30.0, 949.137],
-    [50.0, 7501/3.0],
-    [54.5, 8911/3.0],
+    [50.0, 7501 / 3.0],
+    [54.5, 8911 / 3.0],
 ]
 
 c3 = [
     [1320.42, 2.1632e6, 4.18e9], # means and 3rd moments
     [30.0, 949.137, 31422.3],
-    [50.0, 7501/3.0, 125050.0],
-    [54.5, 8911/3.0, 647569/4.0],
+    [50.0, 7501 / 3.0, 125050.0],
+    [54.5, 8911 / 3.0, 647569 / 4.0],
 ]
 
-p1_free = [rand(2) for i = 1:4]
-p2_free = [rand(3) for i = 1:4]
+p1_free = [rand(2) for i in 1:4]
+p2_free = [rand(3) for i in 1:4]
 
 pof_ = pof(ql, qu, c1, g_h(2), p1_free)
 pof2_ = pof(ql, qu, c2, g_h(2), p2_free)
@@ -47,15 +47,15 @@ pof2_ = pof(ql, qu, c2, g_h(2), p2_free)
 ## Compare to Stenger
 ### 1 Moment Contstraint
 threshold = 4
-p1_free = [fill(0.5, 2) for i = 1:4]
+p1_free = [fill(0.5, 2) for i in 1:4]
 pof_ = pof(ql, qu, c1, g_h(threshold), p1_free)
 @assert pof_ ≈ 0.8346769701
 
-p1_free = [fill(0.25, 2) for i = 1:4]
+p1_free = [fill(0.25, 2) for i in 1:4]
 pof_ = pof(ql, qu, c1, g_h(threshold), p1_free)
 @assert pof_ ≈ 0.8423597615
 
-p1_free = [fill(0.75, 2) for i = 1:4]
+p1_free = [fill(0.75, 2) for i in 1:4]
 pof_ = pof(ql, qu, c1, g_h(threshold), p1_free)
 @assert pof_ ≈ 0.8355977711
 
@@ -69,15 +69,15 @@ pof_ = pof(ql, qu, c1, g_h(threshold), p1_free)
 @assert pof_ ≈ 0.8877773081
 
 ### 2 Moment Constraints
-p2_free = [fill(0.5, 3) for i = 1:4]
+p2_free = [fill(0.5, 3) for i in 1:4]
 pof_ = pof(ql, qu, c2, g_h(threshold), p2_free)
 @assert pof_ ≈ 0.9084523325
 
-p2_free = [fill(0.25, 3) for i = 1:4]
+p2_free = [fill(0.25, 3) for i in 1:4]
 pof_ = pof(ql, qu, c2, g_h(threshold), p2_free)
 @assert pof_ ≈ 0.9158574604
 
-p2_free = [fill(0.75, 3) for i = 1:4]
+p2_free = [fill(0.75, 3) for i in 1:4]
 pof_ = pof(ql, qu, c2, g_h(threshold), p2_free)
 @assert pof_ ≈ 0.9429896112
 
@@ -91,15 +91,15 @@ pof_ = pof(ql, qu, c2, g_h(threshold), p2_free)
 @assert pof_ ≈ 0.9018177916
 
 ### 3 Moment Constraints
-p3_free = [fill(0.5, 4) for i = 1:4]
+p3_free = [fill(0.5, 4) for i in 1:4]
 pof_ = pof(ql, qu, c3, g_h(threshold), p3_free)
-@assert pof_ ≈ 0.9385050420
+@assert pof_ ≈ 0.938505042
 
-p3_free = [fill(0.25, 4) for i = 1:4]
+p3_free = [fill(0.25, 4) for i in 1:4]
 pof_ = pof(ql, qu, c3, g_h(threshold), p3_free)
 @assert pof_ ≈ 0.9267572769
 
-p3_free = [fill(0.75, 4) for i = 1:4]
+p3_free = [fill(0.75, 4) for i in 1:4]
 pof_ = pof(ql, qu, c3, g_h(threshold), p3_free)
 @assert pof_ ≈ 0.9327169677
 

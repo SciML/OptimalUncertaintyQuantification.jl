@@ -1,10 +1,10 @@
 import Base.Iterators: flatten
 
 function convert_inequality_to_jump_leq_lhs(
-    ineq::Inequality;
-    complement = false,
-    tol = 1e-10,
-)
+        ineq::Inequality;
+        complement = false,
+        tol = 1.0e-10,
+    )
     if ineq.relational_op == Symbolics.leq
         jump_leq_lhs = complement ? ineq.rhs - ineq.lhs + tol : ineq.lhs - ineq.rhs
     elseif ineq.relational_op == Symbolics.geq
@@ -15,7 +15,7 @@ function convert_inequality_to_jump_leq_lhs(
     return jump_leq_lhs
 end
 
-function get_finite_bounds(optim_vars; min_bound = -1e10, max_bound = 1e10)
+function get_finite_bounds(optim_vars; min_bound = -1.0e10, max_bound = 1.0e10)
     all_bounds = getbounds.(optim_vars)
 
     lower_bound = map(x -> x[1] != -Inf ? x[1] : min_bound, all_bounds)
@@ -37,14 +37,14 @@ function add_optim_vars!(optim_model, optim_vars)
 
     jump_vars = @variable(optim_model, [1:length(optim_vars)])
 
-    for i = 1:length(optim_vars)
+    for i in 1:length(optim_vars)
         set_name(jump_vars[i], String(optim_var_names[i]))
         optim_model[optim_var_names[i]] = jump_vars[i]
     end
     set_lower_bound.(jump_vars, lower_bounds)
     set_upper_bound.(jump_vars, upper_bounds)
     optim_to_jump_dict =
-        OrderedDict(optim_vars[i] => jump_vars[i] for i = 1:length(optim_vars))
+        OrderedDict(optim_vars[i] => jump_vars[i] for i in 1:length(optim_vars))
     return optim_to_jump_dict
 end
 
@@ -53,19 +53,19 @@ end
 # 2) right optim_vars_sub
 # Possible other things like dispatch on reduction_algorithm or backen d, but for now it is JuMP and WinklerExtremalMeasures.
 # We can rewrite it using map_vars_to_group.
-# 1D case: 
+# 1D case:
 
 # random_variable:
 
 # consider a test function:
-# f(support_row) -> 
+# f(support_row) ->
 function convert_to_JuMP_constraint!(
-    optim_model,
-    constraint::Union{Equation,Inequality},
-    discrete_measure::Union{DiscreteMeasure,ProductDiscreteMeasure},
-    random_variable_group::Union{Num,Vector{Num}},
-    optim_to_jump_dict,
-)
+        optim_model,
+        constraint::Union{Equation, Inequality},
+        discrete_measure::Union{DiscreteMeasure, ProductDiscreteMeasure},
+        random_variable_group::Union{Num, Vector{Num}},
+        optim_to_jump_dict,
+    )
     @debug "Original constraint: $constraint"
     @debug "Random variable group: $random_variable_group"
     # Note: (args) below will the decision_variable corresponding to each support point (which may be multi-dimension for the dependent group case). WILL THIS WORK?
@@ -75,7 +75,7 @@ function convert_to_JuMP_constraint!(
     )
     reduced_constraint = Symbolics.simplify(constraint; rewriter = expectation_rule)
     @debug "Symbolics reduced constraint: $reduced_constraint"
-    if isa(reduced_constraint, Equation)
+    return if isa(reduced_constraint, Equation)
         equality_lhs = reduced_constraint.lhs - reduced_constraint.rhs
         jump_constraint_lhs =
             only(map(identity, substitute(equality_lhs, optim_to_jump_dict)))
@@ -89,10 +89,10 @@ function convert_to_JuMP_constraint!(
 end
 
 function add_weight_constraints!(
-    optim_model,
-    discrete_measure::DiscreteMeasure,
-    optim_to_jump_dict,
-)
+        optim_model,
+        discrete_measure::DiscreteMeasure,
+        optim_to_jump_dict,
+    )
     symbolics_constraint = sum(weights(discrete_measure)) ~ 1.0
     @debug "Symbolics weight constraint: $symbolics_constraint"
     symbolics_lhs = symbolics_constraint.lhs - symbolics_constraint.rhs
@@ -103,13 +103,13 @@ function add_weight_constraints!(
 end
 
 function convert_objective!(
-    optim_model,
-    ouq_sys,
-    objective::ProbabilityObjective,
-    oracle_or_symbolic::Symbolic,
-    optim_to_jump_dict,
-)
-    # Currently we only allow one inequality constraint on the probability. TODO: Set constraints e.g., Turret would require two inequalities. 
+        optim_model,
+        ouq_sys,
+        objective::ProbabilityObjective,
+        oracle_or_symbolic::Symbolic,
+        optim_to_jump_dict,
+    )
+    # Currently we only allow one inequality constraint on the probability. TODO: Set constraints e.g., Turret would require two inequalities.
     # Two inequalities would just mean two more constraints per support point (one satisfying and one not satisfying the condition)
     condition = only(arguments(objective._obj))
     @debug "Probability condition: $condition"
@@ -119,13 +119,13 @@ function convert_objective!(
 
     group_names, constituent_random_variables, induced_discrete_measure =
         process_expression(
-            condition,
-            ouq_sys,
-            _discrete_measure_map,
-            oracle_or_symbolic;
-            ensure_singleton = false,
-            ensure_all = true,
-        )
+        condition,
+        ouq_sys,
+        _discrete_measure_map,
+        oracle_or_symbolic;
+        ensure_singleton = false,
+        ensure_all = true,
+    )
     @debug "Group names: $group_names"
     @debug "Constituent variable group: $constituent_random_variables"
 
@@ -137,11 +137,11 @@ function convert_objective!(
     # This function adds one indicator constraint for support point i corresponding to indicator variable jump_on_var
     # It needs to be called twice for each support point, once for the on constraint and once for the off constraint
     function add_indicator_constraint_for_support!(
-        i,
-        jump_on_var,
-        jump_on_var_name;
-        off_constraint = false,
-    )
+            i,
+            jump_on_var,
+            jump_on_var_name;
+            off_constraint = false,
+        )
         cons_var_name = off_constraint ? :_off : :_on
 
         # Having a random_variable_group as Vector{Num} works perfectly
@@ -162,7 +162,7 @@ function convert_objective!(
             ),
         )
 
-        # Issue is that the indicator constraint has to be linear! 
+        # Issue is that the indicator constraint has to be linear!
         jump_constraint_lhs_var = @variable(optim_model)
         jump_constraint_lhs_var_name = Symbol(:in_con, group_name, i, cons_var_name)
         set_name(jump_constraint_lhs_var, String(jump_constraint_lhs_var_name))
@@ -171,7 +171,7 @@ function convert_objective!(
         @constraint(optim_model, jump_constraint_lhs_var == jump_constraint_lhs)
 
         @debug "Jump $(cons_var_name) constraint for $(jump_on_var_name) : $jump_constraint_lhs <= 0.0"
-        if off_constraint
+        return if off_constraint
             @constraint(optim_model, !jump_on_var --> {jump_constraint_lhs_var <= 0.0})
         else
             @constraint(optim_model, jump_on_var --> {jump_constraint_lhs_var <= 0.0})
@@ -179,7 +179,7 @@ function convert_objective!(
     end
 
     @debug "$(ndims(induced_discrete_measure)) dimensional discrete measure with $(DiscreteMeasures.order(induced_discrete_measure)) support points"
-    for i = 1:DiscreteMeasures.order(induced_discrete_measure)
+    for i in 1:DiscreteMeasures.order(induced_discrete_measure)
         # TODO: symbolic_on_var may not be necessary, can directly substitute to JuMP.
         symbolic_on_var_name = Symbol(:on_var, i)
         symbolic_on_var = only(Symbolics.@variables $(symbolic_on_var_name))
@@ -240,12 +240,12 @@ function convert_objective!(
 end
 
 function convert_objective!(
-    optim_model,
-    ouq_sys,
-    objective::ExpectationObjective,
-    oracle_or_symbolic::Symbolic,
-    optim_to_jump_dict,
-)
+        optim_model,
+        ouq_sys,
+        objective::ExpectationObjective,
+        oracle_or_symbolic::Symbolic,
+        optim_to_jump_dict,
+    )
     @debug "Objective: $objective.objective"
 
     _discrete_measure_map =
@@ -253,13 +253,13 @@ function convert_objective!(
 
     group_names, constituent_random_variables, induced_discrete_measure =
         process_expression(
-            objective._obj,
-            ouq_sys,
-            _discrete_measure_map,
-            oracle_or_symbolic;
-            ensure_singleton = false,
-            ensure_all = true,
-        )
+        objective._obj,
+        ouq_sys,
+        _discrete_measure_map,
+        oracle_or_symbolic;
+        ensure_singleton = false,
+        ensure_all = true,
+    )
 
     @debug "Group names: $group_names"
     @debug "Constituent variable group: $constituent_random_variables"
@@ -267,7 +267,7 @@ function convert_objective!(
 
     expectation_rule = @rule 𝔼(~f) => expectation(
         (single_support) ->
-            substitute(~f, Dict(constituent_random_variables .=> single_support)),
+        substitute(~f, Dict(constituent_random_variables .=> single_support)),
         induced_discrete_measure,
     )
     reduced_objective = Symbolics.simplify(objective._obj; rewriter = expectation_rule)
@@ -276,20 +276,20 @@ function convert_objective!(
     jump_objective = substitute(reduced_objective ~ 0.0, optim_to_jump_dict)
     @debug "JuMP objective: $(jump_objective.lhs)"
     @objective(optim_model, Min, jump_objective.lhs)
-    return (; induced_discrete_measure, reduced_objective) # For debugging. 
+    return (; induced_discrete_measure, reduced_objective) # For debugging.
 end
 
-# objective is dispatched on for canonical moment calses. 
+# objective is dispatched on for canonical moment calses.
 function construct_optimization_problem(
-    ouq_sys::OUQSystem{
-        <:Union{ProbabilityObjective,ExpectationObjective},
-        WinklerExtremalMeasures,
-    },
-    parammap,
-    ::JuMPModel,
-    oracle_or_symbolic::Symbolic;
-    kwargs...,
-)
+        ouq_sys::OUQSystem{
+            <:Union{ProbabilityObjective, ExpectationObjective},
+            WinklerExtremalMeasures,
+        },
+        parammap,
+        ::JuMPModel,
+        oracle_or_symbolic::Symbolic;
+        kwargs...,
+    )
     if !isa(parammap, SciMLBase.NullParameters)
         error("Parameter map not supported for JuMPModel")
     end
@@ -297,7 +297,7 @@ function construct_optimization_problem(
     optim_model = JuMP.Model()
     _discrete_measure_map =
         discrete_measure_map(ouq_sys, ouq_sys.reduction_data, Symbolic())
-    # We want flat vectors even in multidimensional DM cases: 
+    # We want flat vectors even in multidimensional DM cases:
     # This may fail if you have a product measure of discrete measures of multiple random varaibles.
     weight_vars, support_vars =
         collect(flatten(flatten(weights.(values(_discrete_measure_map))))),
@@ -347,10 +347,10 @@ function construct_optimization_problem(
 end
 
 function get_reduced_symbolic_constraint(
-    constraint::Union{Equation,Inequality},
-    discrete_measure::Union{DiscreteMeasure,ProductDiscreteMeasure},
-    random_variable_group::Union{Num,Vector{Num}},
-)
+        constraint::Union{Equation, Inequality},
+        discrete_measure::Union{DiscreteMeasure, ProductDiscreteMeasure},
+        random_variable_group::Union{Num, Vector{Num}},
+    )
     @debug "Original constraint: $constraint"
     @debug "Random variable group: $random_variable_group"
 
@@ -364,12 +364,12 @@ function get_reduced_symbolic_constraint(
 end
 
 function construct_optimization_problem(
-    ouq_sys::OUQSystem{<:ProbabilityObjective,WinklerExtremalMeasures},
-    parammap,
-    ::OptimizationModel,
-    oracle_or_symbolic::Symbolic;
-    kwargs...,
-)
+        ouq_sys::OUQSystem{<:ProbabilityObjective, WinklerExtremalMeasures},
+        parammap,
+        ::OptimizationModel,
+        oracle_or_symbolic::Symbolic;
+        kwargs...,
+    )
     @debug "Objective: $objective.objective"
     objective = ouq_sys.objective
     extract_condition_rule = @rule ℙ(~condition) => ~condition
@@ -378,16 +378,16 @@ function construct_optimization_problem(
         discrete_measure_map(ouq_sys, ouq_sys.reduction_data, oracle_or_symbolic)
     group_names, constituent_random_variables, induced_discrete_measure =
         process_expression(
-            condition,
-            ouq_sys,
-            _discrete_measure_map,
-            oracle_or_symbolic;
-            ensure_singleton = false,
-            ensure_all = true,
-        )
+        condition,
+        ouq_sys,
+        _discrete_measure_map,
+        oracle_or_symbolic;
+        ensure_singleton = false,
+        ensure_all = true,
+    )
 
-    ## In the exact case, we are using the Symbolic.evaluate function 
-    # TODO: Dispatch on Probability Function approximation here. 
+    ## In the exact case, we are using the Symbolic.evaluate function
+    # TODO: Dispatch on Probability Function approximation here.
     reduced_objective = expectation(
         (single_support) -> Symbolics.evaluate(
             condition,
@@ -397,9 +397,9 @@ function construct_optimization_problem(
     )
     @debug "Symbolics reduced objective: $reduced_objective"
 
-    # Constraints: 
+    # Constraints:
     _constraints_map = constraints_map(ouq_sys)
-    _reduced_constraints = Equation[] # Currently only equalities. Should extend to Inequalities trivially in symbolics, but JuMP requires more work. 
+    _reduced_constraints = Equation[] # Currently only equalities. Should extend to Inequalities trivially in symbolics, but JuMP requires more work.
     for group_name in keys(_constraints_map)
         @debug "Adding constraints for $group_name"
         for constraint in _constraints_map[group_name]
@@ -414,7 +414,7 @@ function construct_optimization_problem(
         end
     end
 
-    # Weights constraints: 
+    # Weights constraints:
     _weight_constraints = Equation[]
     for group_name in keys(_discrete_measure_map)
         @debug "Adding weight constraints for $group_name"
@@ -425,7 +425,7 @@ function construct_optimization_problem(
 
     _symbolic_decision_vars = extract_decision_vars(_discrete_measure_map)
     u0_map = map(
-        v -> 0.5*(ModelingToolkit.getbounds(v)[1] .+ ModelingToolkit.getbounds(v)[2]),
+        v -> 0.5 * (ModelingToolkit.getbounds(v)[1] .+ ModelingToolkit.getbounds(v)[2]),
         _symbolic_decision_vars,
     )
 

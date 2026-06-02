@@ -24,15 +24,15 @@ w = [0.2, 0.3, 0.5]
 dm = DiscreteMeasure(x, w)
 ```
 """
-struct DiscreteMeasure{𝕋,𝕏,𝕎} <: AbstractDiscreteMeasure
+struct DiscreteMeasure{𝕋, 𝕏, 𝕎} <: AbstractDiscreteMeasure
     n::Int64
     x::𝕏
     w::𝕎
 
-    function DiscreteMeasure(x::𝕏, w::𝕎) where {𝕋,𝕏<:AbstractVector{𝕋},𝕎<:AbstractVector}
+    function DiscreteMeasure(x::𝕏, w::𝕎) where {𝕋, 𝕏 <: AbstractVector{𝕋}, 𝕎 <: AbstractVector}
         @assert length(w) == length(x)
         @assert allequal(length, x)
-        new{𝕋,𝕏,𝕎}(length(first(x)), x, w)
+        return new{𝕋, 𝕏, 𝕎}(length(first(x)), x, w)
     end
 end
 
@@ -71,14 +71,14 @@ dm2 = DiscreteMeasure(x2, w2)
 pdm = ProductDiscreteMeasure([dm1, dm2])
 ```
 """
-struct ProductDiscreteMeasure{𝕄,𝕏,𝕎} <: AbstractDiscreteMeasure
+struct ProductDiscreteMeasure{𝕄, 𝕏, 𝕎} <: AbstractDiscreteMeasure
     marginals::𝕄
     x::𝕏
     w::𝕎
 
-    function ProductDiscreteMeasure(dms::𝕄) where {𝕄<:AbstractVector{<:DiscreteMeasure}}
+    function ProductDiscreteMeasure(dms::𝕄) where {𝕄 <: AbstractVector{<:DiscreteMeasure}}
         x, w = _product_measure(support.(dms), weights.(dms))
-        new{𝕄,typeof(x),typeof(w)}(dms, x, w)
+        return new{𝕄, typeof(x), typeof(w)}(dms, x, w)
     end
 end
 
@@ -92,7 +92,7 @@ function ProductDiscreteMeasure(pdms::ProductDiscreteMeasure, dms::DiscreteMeasu
     x = vcat(support.(marginals(pdms)), [support(dms)])
     w = vcat(weights.(marginals(pdms)), [weights(dms)])
 
-    ProductDiscreteMeasure(DiscreteMeasure.(x, w))
+    return ProductDiscreteMeasure(DiscreteMeasure.(x, w))
 end
 
 """
@@ -101,23 +101,23 @@ end
 Construct a product measure between a product measure and a vector of discrete measures
 """
 function ProductDiscreteMeasure(
-    pdms::ProductDiscreteMeasure,
-    dms::𝕋,
-) where {𝕋<:AbstractVector{<:DiscreteMeasure}}
+        pdms::ProductDiscreteMeasure,
+        dms::𝕋,
+    ) where {𝕋 <: AbstractVector{<:DiscreteMeasure}}
     x = vcat(support.(marginals(pdms)), support.(dms))
     w = vcat(weights.(marginals(pdms)), weights.(dms))
 
-    ProductDiscreteMeasure(DiscreteMeasure.(x, w))
+    return ProductDiscreteMeasure(DiscreteMeasure.(x, w))
 end
 
-function ==(a::T, b::T) where {T<:AbstractDiscreteMeasure}
+function ==(a::T, b::T) where {T <: AbstractDiscreteMeasure}
     n = nfields(a)
-    all(getfield.(Ref(a), 1:n) .== getfield.(Ref(b), 1:n))
+    return all(getfield.(Ref(a), 1:n) .== getfield.(Ref(b), 1:n))
 end
 
-function isapprox(a::T, b::T; kwargs...) where {T<:AbstractDiscreteMeasure}
+function isapprox(a::T, b::T; kwargs...) where {T <: AbstractDiscreteMeasure}
     n = nfields(a)
-    all(isapprox(getfield.(Ref(a), 1:n), getfield.(Ref(b), 1:n); kwargs...))
+    return all(isapprox(getfield.(Ref(a), 1:n), getfield.(Ref(b), 1:n); kwargs...))
 end
 
 

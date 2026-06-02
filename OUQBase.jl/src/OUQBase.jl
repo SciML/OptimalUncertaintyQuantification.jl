@@ -10,12 +10,12 @@ using CanonicalMoments
 import CanonicalMoments: RawMomentSequence
 
 using Reexport
-# User should not have to depend on CanonicalMoments to use OUQBase. 
+# User should not have to depend on CanonicalMoments to use OUQBase.
 @reexport using CanonicalMoments:
     PolyRootsSupportAlg, PolyWeightAlg, EigvalSupportAlg, EigvecWeightAlg
 
-export 𝔼, ℙ#, 𝟙
-export 𝔼_, ℙ#_, 𝟙_ # for nicer printing 
+export 𝔼, ℙ #, 𝟙
+export 𝔼_, ℙ #_, 𝟙_ # for nicer printing
 include("operators.jl")
 
 
@@ -29,7 +29,7 @@ include("interface.jl")
 include("reduction_transformations/discrete_measures.jl")
 include("reduction_transformations/winkler_extremal_measures.jl")
 
-# Canonical Moments methods: 
+# Canonical Moments methods:
 include("reduction_transformations/canonical_moments.jl")
 
 end

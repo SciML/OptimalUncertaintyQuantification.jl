@@ -12,6 +12,6 @@ makedocs(;
     modules = [DiscreteMeasures],
     authors = "TODO",
     sitename = "DiscreteMeasures.jl",
-    format = Documenter.HTML(;),
+    format = Documenter.HTML(),
     pages = ["Home" => "index.md"],
 )

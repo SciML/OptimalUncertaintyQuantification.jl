@@ -1,15 +1,15 @@
 # Creates a 1D DiscreteMeasure (dispatches on Num vs Vector{Num}) with `n_supports` supports. The supports `x` and weights `w` are vectors of symbolic variables.
 function create_discrete_measure(
-    group_name::Symbol,
-    random_variable::Num,
-    n_supports::Int64,
-)
+        group_name::Symbol,
+        random_variable::Num,
+        n_supports::Int64,
+    )
     supports = Num[]
     weights = Num[]
 
-    # Don't use symbolic arrays! 
-    # Each of these is a vector of vectors 
-    for i = 1:n_supports
+    # Don't use symbolic arrays!
+    # Each of these is a vector of vectors
+    for i in 1:n_supports
         weight_name = Symbol(:w, group_name, :_, i)
         support_name = Symbol(:x, group_name, :_, i)
         push!(
@@ -23,15 +23,15 @@ function create_discrete_measure(
 end
 
 function create_discrete_measure(
-    group_name::Symbol,
-    random_variables::Vector{Num},
-    n_supports::Int64,
-)
+        group_name::Symbol,
+        random_variables::Vector{Num},
+        n_supports::Int64,
+    )
     supports = Vector{Num}[]
     weights = Num[]
 
-    # Each of these is a vector of vectors 
-    for i = 1:n_supports
+    # Each of these is a vector of vectors
+    for i in 1:n_supports
         weight_name = Symbol(:w, group_name, :_, i)
         single_supports_vec = Num[]
         for (j, var) in enumerate(random_variables)
@@ -52,8 +52,8 @@ end
 # Currently, each constraint can only be defined in terms of a single random variable.
 function create_constraints_map(admissible_set::AbstractAdmissibleSet) # TODO: rite in terms of map_vars_to_group
     constraints_map = OrderedDict(
-        var => Union{Equation,Inequality}[] for
-        var in keys(admissible_set.random_variable_map)
+        var => Union{Equation, Inequality}[] for
+            var in keys(admissible_set.random_variable_map)
     )
     for c in admissible_set.constraints
         group_names = get_ordered_group_names(
@@ -69,11 +69,11 @@ end
 
 
 function create_discrete_measure_map(
-    admissible_set::AbstractAdmissibleSet,
-    ::WinklerExtremalMeasures,
-)
+        admissible_set::AbstractAdmissibleSet,
+        ::WinklerExtremalMeasures,
+    )
     constraints_map = create_constraints_map(admissible_set)
-    dm_map = OrderedDict{Symbol,DiscreteMeasure}()
+    dm_map = OrderedDict{Symbol, DiscreteMeasure}()
     for (k, v) in constraints_map
         n_supports = length(v) + 1
         @debug "Creating discrete measure for $k with $n_supports supports"
@@ -84,10 +84,10 @@ function create_discrete_measure_map(
 end
 
 function discrete_measure_map(
-    ouq_sys::OUQSystem,
-    reduction_alg::WinklerExtremalMeasures,
-    ::Symbolic,
-)
+        ouq_sys::OUQSystem,
+        reduction_alg::WinklerExtremalMeasures,
+        ::Symbolic,
+    )
     discrete_measure_map =
         create_discrete_measure_map(ouq_sys.admissible_set, reduction_alg)
     return discrete_measure_map
@@ -95,11 +95,11 @@ end
 #ouq_sys.reduction_data isa StengerCanonicalMoments ? ouq_sys.reduction_data.transformed_discrete_measure_map : ouq_sys.reduction_data.discrete_measure_map
 
 function discrete_measure_map(
-    ouq_sys::OUQSystem,
-    reduction_alg::WinklerExtremalMeasures,
-    oracle_or_symbolic::Oracle,
-)
-    @error "Not implemented"
+        ouq_sys::OUQSystem,
+        reduction_alg::WinklerExtremalMeasures,
+        oracle_or_symbolic::Oracle,
+    )
+    return @error "Not implemented"
 end
 
 

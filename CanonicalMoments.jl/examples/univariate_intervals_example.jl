@@ -6,8 +6,8 @@ using CanonicalMoments,
     ForwardDiff, Polynomials, IntervalArithmetic, Optimization, OptimizationOptimJL
 using IntervalLinearAlgebra, IntervalEigenSolvers, DiscreteMeasures
 
-# generate example data. first n raw moments of uniform distribution that would define the admissible set. 
-uniform_raw_moment(a, b, n) = (b^(n+1) - a^(n+1)) / ((n+1)*(b-a))
+# generate example data. first n raw moments of uniform distribution that would define the admissible set.
+uniform_raw_moment(a, b, n) = (b^(n + 1) - a^(n + 1)) / ((n + 1) * (b - a))
 
 lb = 0
 ub = 2
@@ -20,7 +20,7 @@ rms = RawMomentSequence(raw_constraints, lb, ub)
 transform = DiscreteMeasureTransform1(rms)   # callable struct
 
 # Given n raw constraints, pick n+1 free parameters, this is what we optimize over
-p_free = fill(Interval(0.5, 0.6), n+1)
+p_free = fill(Interval(0.5, 0.6), n + 1)
 
 support_alg = EigvalSupportAlg()
 weight_alg = EigvecWeightAlg()
@@ -32,7 +32,7 @@ weight_alg = EigvecWeightAlg()
 
 # Check raw moments contained in intervals
 map(enumerate(raw_constraints)) do (i, c)
-    c ∈ expectation(x->x^i, μ_tight)
+    c ∈ expectation(x -> x^i, μ_tight)
 end |> all
 
 g(x) = sin(x)
@@ -49,7 +49,7 @@ range_g = g(_x)
 w = weights(μ_tight)
 
 function clamp_sum(w)
-    map(1:length(w)) do i
+    return map(1:length(w)) do i
         @views 1 - sum(w[1:length(w) .!= i])
     end
 end
@@ -63,8 +63,8 @@ A = CanonicalMoments._companion_matrix(ST)
 
 # Gerlach worst/case 1st eigenvector element
 function clamp_gerlach(A, λ)
-    map(1:length(λ)) do i
-        Interval(0, sup(1/(((λ[i] - A[1, 1])/A[1, 2])^2 + 1)))
+    return map(1:length(λ)) do i
+        Interval(0, sup(1 / (((λ[i] - A[1, 1]) / A[1, 2])^2 + 1)))
     end
 end
 
@@ -72,8 +72,6 @@ w = weights(μ)
 wn = normalize(w)
 wn2 = IntervalEigenSolvers.normalize2(A, λ, 1)
 b = clamp_gerlach(A, λ)
-
-
 
 
 μ_tight2 = DiscreteMeasure(support(μ_tight), intersect.(w, b, a))

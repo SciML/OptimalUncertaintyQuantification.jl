@@ -11,14 +11,14 @@ within the interval ``[lb, ub] ⊆ ℝ``.
 - `lb`: The lower bound of domain.
 - `ub`: The upper bound of domain.
 """
-struct RawMomentSequence{𝕋<:AbstractVector,𝕃,𝕌} <: AbstractMomentSequence
+struct RawMomentSequence{𝕋 <: AbstractVector, 𝕃, 𝕌} <: AbstractMomentSequence
     moments::𝕋
     lb::𝕃
     ub::𝕌
 
-    function RawMomentSequence(moments::𝕋, lb::𝕃, ub::𝕌) where {𝕋,𝕃,𝕌}
+    function RawMomentSequence(moments::𝕋, lb::𝕃, ub::𝕌) where {𝕋, 𝕃, 𝕌}
         # _verify_bounds(lb, ub)
-        new{𝕋,𝕃,𝕌}(moments, lb, ub)
+        return new{𝕋, 𝕃, 𝕌}(moments, lb, ub)
     end
 end
 
@@ -32,13 +32,13 @@ Represents a sequence of raw moments after the domain is transformed to the unit
 - `lb`: The lower bound of the domain of the source `RawMomentSequence`
 - `ub`: The upper bound of the domain of the source `RawMomentSequence`
 """
-struct UnitIntervalRawMomentSequence{𝕋<:AbstractVector,𝕃,𝕌} <: AbstractMomentSequence
+struct UnitIntervalRawMomentSequence{𝕋 <: AbstractVector, 𝕃, 𝕌} <: AbstractMomentSequence
     moments::𝕋
     lb::𝕃
     ub::𝕌
-    function UnitIntervalRawMomentSequence(moments::𝕋, lb::𝕃, ub::𝕌) where {𝕋,𝕃,𝕌}
+    function UnitIntervalRawMomentSequence(moments::𝕋, lb::𝕃, ub::𝕌) where {𝕋, 𝕃, 𝕌}
         # _verify_bounds(lb, ub)
-        new{𝕋,𝕃,𝕌}(moments, lb, ub)
+        return new{𝕋, 𝕃, 𝕌}(moments, lb, ub)
     end
 end
 
@@ -53,13 +53,13 @@ where ``x̄`` is the mean of the random variable ``x`` within the interval ``[lb
 - `lb`: The lower bound of the domain.
 - `ub`: The upper bound of the domain.
 """
-struct CentralMomentSequence{𝕋<:AbstractVector,𝕃,𝕌} <: AbstractMomentSequence
+struct CentralMomentSequence{𝕋 <: AbstractVector, 𝕃, 𝕌} <: AbstractMomentSequence
     moments::𝕋
     lb::𝕃
     ub::𝕌
-    function CentralMomentSequence(moments::𝕋, lb::𝕃, ub::𝕌) where {𝕋,𝕃,𝕌}
+    function CentralMomentSequence(moments::𝕋, lb::𝕃, ub::𝕌) where {𝕋, 𝕃, 𝕌}
         # _verify_bounds(lb, ub)
-        new{𝕋,𝕃,𝕌}(moments, lb, ub)
+        return new{𝕋, 𝕃, 𝕌}(moments, lb, ub)
     end
 end
 
@@ -73,13 +73,13 @@ Represents a sequence of canonical moments.
 - `lb`: The lower bound of the domain.
 - `ub`: The upper bound of the domain.
 """
-struct CanonicalMomentSequence{𝕋<:AbstractVector,𝕃,𝕌} <: AbstractMomentSequence
+struct CanonicalMomentSequence{𝕋 <: AbstractVector, 𝕃, 𝕌} <: AbstractMomentSequence
     moments::𝕋
     lb::𝕃
     ub::𝕌
-    function CanonicalMomentSequence(moments::𝕋, lb::𝕃, ub::𝕌) where {𝕋,𝕃,𝕌}
+    function CanonicalMomentSequence(moments::𝕋, lb::𝕃, ub::𝕌) where {𝕋, 𝕃, 𝕌}
         # _verify_bounds(lb, ub)
-        new{𝕋,𝕃,𝕌}(moments, lb, ub)
+        return new{𝕋, 𝕃, 𝕌}(moments, lb, ub)
     end
 end
 
@@ -89,7 +89,7 @@ end
 This function converts central moments to raw moments using the provided mean, μ.
 """
 function RawMomentSequence(cms::CentralMomentSequence, μ)
-    RawMomentSequence(
+    return RawMomentSequence(
         _sequence_center_transform(moments(cms), μ, 0),
         lbound(cms),
         ubound(cms),
@@ -97,7 +97,7 @@ function RawMomentSequence(cms::CentralMomentSequence, μ)
 end
 
 function RawMomentSequence(nrms::UnitIntervalRawMomentSequence)
-    RawMomentSequence(
+    return RawMomentSequence(
         _normed2raw(moments(nrms), lbound(nrms), ubound(nrms)),
         lbound(nrms),
         ubound(nrms),
@@ -107,12 +107,12 @@ end
 function CentralMomentSequence(rms::RawMomentSequence)
     m = moments(rms)
     μ = mean(rms)
-    CentralMomentSequence(_sequence_center_transform(m, 0, μ), lbound(rms), ubound(rms))
+    return CentralMomentSequence(_sequence_center_transform(m, 0, μ), lbound(rms), ubound(rms))
 end
 
 function UnitIntervalRawMomentSequence(rms::RawMomentSequence)
     nrm = _raw2normed(moments(rms), lbound(rms), ubound(rms))
-    UnitIntervalRawMomentSequence(nrm, lbound(rms), ubound(rms))
+    return UnitIntervalRawMomentSequence(nrm, lbound(rms), ubound(rms))
 end
 
 """
@@ -121,15 +121,15 @@ end
 This function first converts the central moments to raw moments using the provided mean, μ, and then transforms the resulting `RawMomentSequence` to a `UnitIntervalRawMomentSequence`.
 """
 function UnitIntervalRawMomentSequence(cms::CentralMomentSequence, μ)
-    UnitIntervalRawMomentSequence(RawMomentSequence(cms, μ))
+    return UnitIntervalRawMomentSequence(RawMomentSequence(cms, μ))
 end
 
 function CanonicalMomentSequence(nrms::UnitIntervalRawMomentSequence)
-    CanonicalMomentSequence(_normed2canonical(moments(nrms)), lbound(nrms), ubound(nrms))
+    return CanonicalMomentSequence(_normed2canonical(moments(nrms)), lbound(nrms), ubound(nrms))
 end
 
 function CanonicalMomentSequence(rms::RawMomentSequence)
-    CanonicalMomentSequence(UnitIntervalRawMomentSequence(rms))
+    return CanonicalMomentSequence(UnitIntervalRawMomentSequence(rms))
 end
 
 """
@@ -151,7 +151,7 @@ This uses the property that odd-numbered canonical moments are ``1/2`` for symme
 """
 function issymmetric(cms::CanonicalMomentSequence; kwargs...)
     odd_moments = @views moments(cms)[1:2:end]
-    all(≈(1/2; kwargs...), odd_moments)
+    return all(≈(1 / 2; kwargs...), odd_moments)
 end
 
 """
@@ -189,8 +189,8 @@ Returns the upper bound of the sequence domain.
 """
 ubound(m::AbstractMomentSequence) = m.ub
 
-function isapprox(a::𝕋, b::𝕋; kwargs...) where {𝕋<:AbstractMomentSequence}
-    isapprox(moments(a), moments(b); kwargs...) &&
+function isapprox(a::𝕋, b::𝕋; kwargs...) where {𝕋 <: AbstractMomentSequence}
+    return isapprox(moments(a), moments(b); kwargs...) &&
         lbound(a) == lbound(b) &&
         ubound(a) == ubound(b)
 end

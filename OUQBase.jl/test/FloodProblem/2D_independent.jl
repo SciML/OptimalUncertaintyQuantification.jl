@@ -25,12 +25,12 @@ Zᵥ = 50.0
 
 admissible_set = AdmissibleSet(rand_vars, constraints)
 
-H = (Q/(300*Kₛ*((Zₘ - Zᵥ)/5000)^(0.5)))^(3/5)
+H = (Q / (300 * Kₛ * ((Zₘ - Zᵥ) / 5000)^(0.5)))^(3 / 5)
 
 objective_expectation = 𝔼(H)
 
 
-# Design parameter: 
+# Design parameter:
 pars = @parameters begin
     h = 2.0, [bounds = (2.0, 4.0)]
 end

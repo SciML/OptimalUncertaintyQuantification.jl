@@ -9,14 +9,14 @@ This struct stores the raw moment sequence (`rm_seq`) and the corresponding cano
 - `rm_seq::RawMomentSequence`: The raw moment sequence.
 - `cm_seq::CanonicalMomentSequence`: The canonical moment sequence.
 """
-struct DiscreteMeasureTransform1{ℝ,ℂ}
+struct DiscreteMeasureTransform1{ℝ, ℂ}
     rm_seq::ℝ
     cm_seq::ℂ
     function DiscreteMeasureTransform1(
-        rm_seq::ℝ,
-        cm_seq::ℂ,
-    ) where {ℝ<:RawMomentSequence,ℂ<:CanonicalMomentSequence}
-        new{ℝ,ℂ}(rm_seq, cm_seq)
+            rm_seq::ℝ,
+            cm_seq::ℂ,
+        ) where {ℝ <: RawMomentSequence, ℂ <: CanonicalMomentSequence}
+        return new{ℝ, ℂ}(rm_seq, cm_seq)
     end
 end
 
@@ -29,7 +29,7 @@ This constructor creates a `DiscreteMeasureTransform1` object using a given `Raw
 - `rm_seq::RawMomentSequence`: The raw moment sequence defining the transformation.
 """
 function DiscreteMeasureTransform1(rm_seq::RawMomentSequence)
-    DiscreteMeasureTransform1(rm_seq, CanonicalMomentSequence(rm_seq))
+    return DiscreteMeasureTransform1(rm_seq, CanonicalMomentSequence(rm_seq))
 end
 
 """
@@ -43,10 +43,10 @@ Constructs a `DiscreteMeasure` from a sequence of free canonical moments.
 - `weight_alg = PolyWeightAlg()`: The algorithm used to compute the weights of the discrete measure. Defaults to `PolyWeightAlg()`.
 """
 function (dmt::DiscreteMeasureTransform1)(
-    p_free;
-    support_alg = EigvalSupportAlg(),
-    weight_alg = PolyWeightAlg(),
-)
+        p_free;
+        support_alg = EigvalSupportAlg(),
+        weight_alg = PolyWeightAlg(),
+    )
     rms = dmt.rm_seq
     cms = dmt.cm_seq
 
@@ -55,5 +55,5 @@ function (dmt::DiscreteMeasureTransform1)(
 
     SR = StieltjesTransform(cms, p_free)
     x, w = measure(SR, moments(rms), support_alg, weight_alg)
-    DiscreteMeasure(collect(x), collect(w)) # Want to avoid all ways symbolic arrays can creep in.
+    return DiscreteMeasure(collect(x), collect(w)) # Want to avoid all ways symbolic arrays can creep in.
 end

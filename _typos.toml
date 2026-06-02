@@ -1,0 +1,4 @@
+[files]
+# Machine-generated Pluto.jl HTML exports; the only hits are author surnames
+# (e.g. "Fons van der Plas") in embedded boilerplate, not editable prose.
+extend-exclude = ["presentation/*.html"]

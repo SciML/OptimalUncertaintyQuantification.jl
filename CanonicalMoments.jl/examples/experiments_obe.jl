@@ -1,8 +1,7 @@
-
 #######################################
 
 # support_alg = PolyRootsSupportAlg(quadratic_eq_sridhare)
-# function solver(A, b) 
+# function solver(A, b)
 #     display(A)
 #     display(b)
 #     IntervalLinearAlgebra.solve(A, b, Jacobi(), NoPrecondition(), fill(0..1, n+1))
@@ -25,7 +24,7 @@ support_points, weights = transform(p_free; support_alg, weight_alg)
 support_points = support_points .∩ Interval(lb, ub)
 
 for pt in support_points
-    band!([inf(pt), sup(pt)], fill(-0.2, n+1), fill(0.2, n+1))
+    band!([inf(pt), sup(pt)], fill(-0.2, n + 1), fill(0.2, n + 1))
 end
 
 raw_reconstructed2 = map(1:n) do i
@@ -43,8 +42,6 @@ raw_constraints .∈ raw_reconstructed2
 CanonicalMoments2.expectation(sin, support_points, weights)
 
 
-
-
 # Reconstruct raw moments from discrete measure and compare to verify raw constraints are met
 x, weights = transform(sol; support_alg, weight_alg)
 weights
@@ -59,7 +56,7 @@ raw_constraints ≈ raw_reconstructed
 using GLMakie
 
 xs = map(1:100000) do i
-    p_free = rand(n+1)
+    p_free = rand(n + 1)
     support_points, weights = transform(p_free; support_alg, weight_alg)
     support_points
 end
@@ -70,15 +67,15 @@ hist(xsv; normalization = :pdf, bins = 100)
 
 
 f = hist(getindex.(xs, 1); normalization = :probability, bins = 100)
-for i = 2:(n+1)
+for i in 2:(n + 1)
     hist!(getindex.(xs, i); normalization = :probability, bins = 100)
 end
 f
 
 cms = transform.cm_seq
 
-pfrees = [rand(n+1) for _ = 1:1000]
-SRs = map(p->StieltjesTransform(cms, p), pfrees)
+pfrees = [rand(n + 1) for _ in 1:1000]
+SRs = map(p -> StieltjesTransform(cms, p), pfrees)
 Bs = getfield.(SRs, :B)
 Cs = getfield.(SRs, :C)
 
@@ -91,10 +88,10 @@ npolys = map(SRs) do SR
 end
 
 begin
-    f = lines(0..1, npolys[1]//polys[1])
+    f = lines(0 .. 1, npolys[1] // polys[1])
 
     for (p, n) in zip(polys, npolys)
-        lines!(0..1, n/p, color = (:red, 0.008))
+        lines!(0 .. 1, n / p, color = (:red, 0.008))
     end
 end
 
