@@ -23,12 +23,12 @@ Note, that the polynomial is guaranteed to have real, unique roots.
 - `args`: Additional arguments passed to the `solver`.
 - `kwargs`: Additional keyword arguments passed to the `solver`.
 """
-struct PolyRootsSupportAlg{𝕊,𝔸,𝕂} <: AbstractSupportAlg
+struct PolyRootsSupportAlg{𝕊, 𝔸, 𝕂} <: AbstractSupportAlg
     solver::𝕊
     args::𝔸
     kwargs::𝕂
     PolyRootsSupportAlg(alg = DEFAULT_ROOT_SOLVER, args...; kwargs...) =
-        new{typeof(alg),typeof(args),typeof(kwargs)}(alg, args, kwargs)
+        new{typeof(alg), typeof(args), typeof(kwargs)}(alg, args, kwargs)
 end
 
 """
@@ -43,12 +43,12 @@ The default solver is set to `DEFAULT_EIGENVAL_SOLVER`.
 - `args`: Additional arguments passed to the `solver`.
 - `kwargs`: Additional keyword arguments passed to the `solver`.
 """
-struct EigvalSupportAlg{𝕊,𝔸,𝕂} <: AbstractSupportAlg
+struct EigvalSupportAlg{𝕊, 𝔸, 𝕂} <: AbstractSupportAlg
     solver::𝕊
     args::𝔸
     kwargs::𝕂
     EigvalSupportAlg(alg = DEFAULT_EIGENVAL_SOLVER, args...; kwargs...) =
-        new{typeof(alg),typeof(args),typeof(kwargs)}(alg, args, kwargs)
+        new{typeof(alg), typeof(args), typeof(kwargs)}(alg, args, kwargs)
 end
 (alg::EigvalSupportAlg)(M::AbstractMatrix{<:Real}) =
     collect(alg.solver(M, alg.args...; alg.kwargs...))
@@ -73,12 +73,12 @@ Computes the weights of a discrete measure by solving a linear system. The defau
 - `args`: Additional positional arguments passed to the `solver`.
 - `kwargs`: Additional keyword arguments passed to the `solver`.
 """
-struct LinearSolveWeightAlg{𝕊,𝔸,𝕂} <: AbstractWeightAlg
+struct LinearSolveWeightAlg{𝕊, 𝔸, 𝕂} <: AbstractWeightAlg
     solver::𝕊
     args::𝔸
     kwargs::𝕂
     LinearSolveWeightAlg(alg = DEFAULT_LINEARSOLVE_SOLVER, args...; kwargs...) =
-        new{typeof(alg),typeof(args),typeof(kwargs)}(alg, args, kwargs)
+        new{typeof(alg), typeof(args), typeof(kwargs)}(alg, args, kwargs)
 end
 
 """
@@ -104,12 +104,12 @@ The default solver is set to `DEFAULT_EIGENVEC_SOLVER`.
 - `args`: Additional arguments passed to the `solver`.
 - `kwargs`: Additional keyword arguments passed to the `solver`.
 """
-struct EigvecWeightAlg{𝕊,𝔸,𝕂} <: AbstractWeightAlg
+struct EigvecWeightAlg{𝕊, 𝔸, 𝕂} <: AbstractWeightAlg
     solver::𝕊
     args::𝔸
     kwargs::𝕂
     EigvecWeightAlg(alg = DEFAULT_EIGENVEC_SOLVER, args...; kwargs...) =
-        new{typeof(alg),typeof(args),typeof(kwargs)}(alg, args, kwargs)
+        new{typeof(alg), typeof(args), typeof(kwargs)}(alg, args, kwargs)
 end
 
 (alg::EigvecWeightAlg)(M::AbstractMatrix{<:Real}) =
@@ -132,41 +132,41 @@ Calculates the support and weights of a discrete measure associated with a given
 - A tuple `(x, w)` where `x` is a vector of support points and `w` is a vector of corresponding weights.
 """
 function measure(
-    SR::StieltjesTransform,
-    c,
-    support_alg::AbstractSupportAlg,
-    weight_alg::AbstractWeightAlg,
-)
+        SR::StieltjesTransform,
+        c,
+        support_alg::AbstractSupportAlg,
+        weight_alg::AbstractWeightAlg,
+    )
     x = support(SR, support_alg)
     w = weights(SR, x, c, weight_alg)
-    x, w
+    return x, w
 end
 
 function measure(
-    SR::StieltjesTransform,
-    c,
-    support_alg::PolyRootsSupportAlg,
-    weight_alg::PolyWeightAlg,
-)
+        SR::StieltjesTransform,
+        c,
+        support_alg::PolyRootsSupportAlg,
+        weight_alg::PolyWeightAlg,
+    )
     Pstar = denominator(SR)
     P1 = numerator(SR)
 
     x = _support(Pstar, support_alg)
     w = _weights(P1, Pstar, x, weight_alg)
-    x, w
+    return x, w
 end
 
 function measure(
-    SR::StieltjesTransform,
-    c,
-    support_alg::EigvalSupportAlg,
-    weight_alg::EigvecWeightAlg,
-)
+        SR::StieltjesTransform,
+        c,
+        support_alg::EigvalSupportAlg,
+        weight_alg::EigvecWeightAlg,
+    )
     A = _companion_matrix(SR)
     vals = support_alg(A)
     vecs = weight_alg(A, vals)
 
-    vals, view(vecs, 1, :) .^ 2
+    return vals, view(vecs, 1, :) .^ 2
 end
 
 """
@@ -179,12 +179,12 @@ Calculates the support points of a discrete measure associated with a given Stie
 """
 function support(SR::StieltjesTransform, alg::PolyRootsSupportAlg)
     Pstar = denominator(SR)
-    _support(Pstar, alg)
+    return _support(Pstar, alg)
 end
 
 function support(SR::StieltjesTransform, alg::EigvalSupportAlg)
     A = _companion_matrix(SR)
-    alg(A)
+    return alg(A)
 end
 
 _support(P::Polynomial, alg::PolyRootsSupportAlg) =
@@ -202,25 +202,25 @@ Calculates the weights `w` of a discrete measure with support `x` such that the 
 - `alg::AbstractWeightAlg`:  The algorithm to use
 """
 function weights(SR::StieltjesTransform, x, c, alg::PolyWeightAlg)
-    _weights(numerator(SR), denominator(SR), x, alg)
+    return _weights(numerator(SR), denominator(SR), x, alg)
 end
 
 function weights(
-    SR::StieltjesTransform,
-    x::AbstractVector{𝕏},
-    c::AbstractVector{ℂ},
-    alg::LinearSolveWeightAlg,
-) where {𝕏,ℂ}
+        SR::StieltjesTransform,
+        x::AbstractVector{𝕏},
+        c::AbstractVector{ℂ},
+        alg::LinearSolveWeightAlg,
+    ) where {𝕏, ℂ}
     N = length(c)
 
     𝕋 = promote_type(𝕏, ℂ)
-    A = Matrix{𝕋}(undef, N+1, N+1)
-    b = Vector{𝕋}(undef, N+1)
+    A = Matrix{𝕋}(undef, N + 1, N + 1)
+    b = Vector{𝕋}(undef, N + 1)
     @views begin
-        A[1, :] = ones(𝕋, N+1)
+        A[1, :] = ones(𝕋, N + 1)
         for i in eachindex(x)
-            for j = 1:N
-                A[j+1, i] = x[i]^j
+            for j in 1:N
+                A[j + 1, i] = x[i]^j
             end
         end
         b[1] = one(𝕋)
@@ -228,25 +228,25 @@ function weights(
 
     end
 
-    alg.solver(A, b, alg.args...; alg.kwargs...)
+    return alg.solver(A, b, alg.args...; alg.kwargs...)
 end
 
 function weights(SR::StieltjesTransform, x, c, alg::EigvecWeightAlg)
     A = _companion_matrix(SR)
     v = alg(A)
-    v[1, :] .^ 2
+    return v[1, :] .^ 2
 end
 
 function _weights(num::Polynomial, den::Polynomial, x, alg::PolyWeightAlg)
     QP = num // Polynomials.derivative(den)
-    map(x) do xi
+    return map(x) do xi
         QP(xi)
     end
 end
 
 
 _companion_matrix(SR::StieltjesTransform) = _companion_matrix(SR.B, SR.C)
-# Just dispatch here to create wrapped companion matrix. 
+# Just dispatch here to create wrapped companion matrix.
 function _companion_matrix(B, C)
-    @views SymTridiagonal(-B, sqrt.(C[2:end]))
+    return @views SymTridiagonal(-B, sqrt.(C[2:end]))
 end

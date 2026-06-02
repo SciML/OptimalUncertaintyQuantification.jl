@@ -16,12 +16,12 @@ Kₛ = 30.0
 Zₘ = 54.5
 Zᵥ = 50.0
 
-H = (Q/(300*Kₛ*((Zₘ - Zᵥ)/5000)^(0.5)))^(3/5)
+H = (Q / (300 * Kₛ * ((Zₘ - Zᵥ) / 5000)^(0.5)))^(3 / 5)
 
 objective_expectation = 𝔼(H)
 
 
-# Design parameter: 
+# Design parameter:
 pars = @parameters begin
     h = 2.0, [bounds = (2.0, 4.0)]
 end
@@ -99,12 +99,12 @@ isdefined(Main, :probability_canonical_moments_problems_analytic) && push!(
 isdefined(Main, :probability_solutions) &&
     push!(probability_solutions, "Flood Q only" => 0.17)
 
-# Hacky test for now: 
+# Hacky test for now:
 ouq_prob = OUQProblem(ouq_sys_probability_canonical_moments, OptimizationModel(), Oracle())
 sol = solve(
-            ouq_prob.optim_model,
-            BBO_adaptive_de_rand_1_bin_radiuslimited();
-            maxiters = 100,
-            maxtime = 60.0,
-            verbose = true,
-            )
+    ouq_prob.optim_model,
+    BBO_adaptive_de_rand_1_bin_radiuslimited();
+    maxiters = 100,
+    maxtime = 60.0,
+    verbose = true,
+)

@@ -30,7 +30,7 @@ using Test
 #     @test clamp_domain([Interval(-2, -1)], lb, ub) == []
 #     @test clamp_domain([Interval(2, 3)], lb, ub) == []
 #     @test clamp_domain([
-#         Interval(.1, .9), 
+#         Interval(.1, .9),
 #         Interval(-.1, .1),
 #         Interval(lb.lo, .1),
 #         Interval(.1, 1.1),
@@ -58,7 +58,7 @@ using Test
 #         for _setup in setup
 #             p = _setup.free
 #             for (lb, ub, _c, _p) in zip(ql, qu, c, p)
-#                 can = moments_to_canonical(lb, ub, _c, _p) 
+#                 can = moments_to_canonical(lb, ub, _c, _p)
 #                 @test all(@. 0 ≤ can ≤ 1)
 
 #                 can_IA = moments_to_canonical(Interval(lb), Interval(ub), Interval.(_c), Interval.(_p))

@@ -1,0 +1,17 @@
+name: "Spell Check"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  spell-check:
+    name: "Spell Check with Typos"
+    uses: "SciML/.github/.github/workflows/spellcheck.yml@v1"
+    secrets: "inherit"

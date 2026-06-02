@@ -9,7 +9,7 @@ import CanonicalMoments: RawMomentSequence
 using SciMLBase
 
 
-function get_raw_moment_order(equation::Union{Equation,Inequality}, random_var::Num)
+function get_raw_moment_order(equation::Union{Equation, Inequality}, random_var::Num)
     remove_expectation_rule = @rule 𝔼(~f) => ~f
     extract_moment_rule = @rule ^(~base, ~exponent) => ~exponent
     combined_rule = Chain([remove_expectation_rule, extract_moment_rule])
@@ -27,9 +27,9 @@ function get_raw_moment_order(equation::Union{Equation,Inequality}, random_var::
 end
 
 function CanonicalMoments.RawMomentSequence(
-    random_var::Num,
-    constraints::Vector{Union{Equation,Inequality}},
-)
+        random_var::Num,
+        constraints::Vector{Union{Equation, Inequality}},
+    )
     num_group_cons = length(constraints)
     raw_moment_sequence = fill(NaN, num_group_cons)
     for (i, constraint) in enumerate(constraints)
@@ -41,8 +41,8 @@ function CanonicalMoments.RawMomentSequence(
 end
 
 function create_raw_moments_map(admissible_set::AbstractAdmissibleSet)
-    constraints_map = create_constraints_map(admissible_set)# Reuse existing? 
-    raw_moments_map = OrderedDict{Symbol,RawMomentSequence}()
+    constraints_map = create_constraints_map(admissible_set) # Reuse existing?
+    raw_moments_map = OrderedDict{Symbol, RawMomentSequence}()
     for (k, v) in constraints_map
         length(admissible_set.random_variable_map[k]) == 1 ||
             error("Group is not independent, cannot use canonical moments")
@@ -53,10 +53,10 @@ function create_raw_moments_map(admissible_set::AbstractAdmissibleSet)
 end
 
 # This creates the optimization decision variables for the canonical moment problem.
-# Some code repetition with create_discrete_measure but keeping both makes sense because of the need to provide correct bounds for supports in discrete_measure case.  
+# Some code repetition with create_discrete_measure but keeping both makes sense because of the need to provide correct bounds for supports in discrete_measure case.
 function create_free_variable_vec(group_name::Symbol, n_supports::Int64)
     p_frees = Num[]
-    for i = 1:n_supports
+    for i in 1:n_supports
         p_free_name = Symbol(:p_free, group_name, :_, i)
         push!(p_frees, only(Symbolics.@variables $p_free_name, [bounds = (0.0, 1.0)]))
     end
@@ -71,12 +71,12 @@ Single function to return all 4 maps:
 - transformed_discrete_measure_map::OrderedDict{Symbol, DiscreteMeasures.DiscreteMeasure}. Maps group to (transformed) discrete measure, where the weights and supports are a function of the free decision variables. 
 """
 function create_canonical_moment_maps(
-    admissible_set::AbstractAdmissibleSet,
-    reduction_alg::StengerCanonicalMoments,
-)
+        admissible_set::AbstractAdmissibleSet,
+        reduction_alg::StengerCanonicalMoments,
+    )
     constraints_map = create_constraints_map(admissible_set)
     raw_moments_map = create_raw_moments_map(admissible_set)
-    p_free_map = OrderedDict{Symbol,Vector{Num}}()
+    p_free_map = OrderedDict{Symbol, Vector{Num}}()
     for (k, v) in constraints_map
         n_supports = length(v) + 1
         @debug "Creating a free decision variable vector for $k of length $n_supports"
@@ -88,11 +88,11 @@ function create_canonical_moment_maps(
 end
 
 function discrete_measure_map(
-    ouq_sys::OUQSystem,
-    reduction_alg::StengerCanonicalMoments,
-    ::Symbolic,
-)
-    transformed_discrete_measure_map = OrderedDict{Symbol,DiscreteMeasure}()
+        ouq_sys::OUQSystem,
+        reduction_alg::StengerCanonicalMoments,
+        ::Symbolic,
+    )
+    transformed_discrete_measure_map = OrderedDict{Symbol, DiscreteMeasure}()
     _raw_moments_map = raw_moments_map(ouq_sys)
     _p_free_map = p_free_map(ouq_sys)
     for (k, v) in constraints_map(ouq_sys)
@@ -107,15 +107,15 @@ function discrete_measure_map(
 end
 
 function construct_optimization_problem(
-    ouq_sys::OUQSystem{ExpectationObjective,StengerCanonicalMoments},
-    parammap,
-    ::OptimizationModel,
-    oracle_or_symbolic::Symbolic;
-    kwargs...,
-)
+        ouq_sys::OUQSystem{ExpectationObjective, StengerCanonicalMoments},
+        parammap,
+        ::OptimizationModel,
+        oracle_or_symbolic::Symbolic;
+        kwargs...,
+    )
     objective = ouq_sys.objective
     p_frees_vec = reduce(vcat, values(p_free_map(ouq_sys)))
-    # Somewhat repetitive code: 
+    # Somewhat repetitive code:
     @debug "Objective: $objective._obj"
 
     _discrete_measure_map =
@@ -123,20 +123,20 @@ function construct_optimization_problem(
 
     group_names, constituent_random_variables, induced_discrete_measure =
         process_expression(
-            objective._obj,
-            ouq_sys,
-            _discrete_measure_map,
-            oracle_or_symbolic;
-            ensure_singleton = false,
-            ensure_all = true,
-        )
+        objective._obj,
+        ouq_sys,
+        _discrete_measure_map,
+        oracle_or_symbolic;
+        ensure_singleton = false,
+        ensure_all = true,
+    )
     group_name = Symbol(group_names...)
     @debug "Group names: $group_names"
     @debug "Constituent random variables: $constituent_random_variables"
 
     expectation_rule = @rule 𝔼(~f) => expectation(
         (single_support) ->
-            substitute(~f, Dict(constituent_random_variables .=> single_support)),
+        substitute(~f, Dict(constituent_random_variables .=> single_support)),
         induced_discrete_measure,
     )
     reduced_objective = Symbolics.simplify(objective._obj; rewriter = expectation_rule)
@@ -145,7 +145,7 @@ function construct_optimization_problem(
         OptimizationSystem(reduced_objective, p_frees_vec, ouq_sys.parameters; kwargs...)
     sys = structural_simplify(opt_sys)
     u0_map = map(
-        v -> 0.5*(ModelingToolkit.getbounds(v)[1] .+ ModelingToolkit.getbounds(v)[2]),
+        v -> 0.5 * (ModelingToolkit.getbounds(v)[1] .+ ModelingToolkit.getbounds(v)[2]),
         unknowns(sys),
     )
     debug_info = Dict(
@@ -160,27 +160,27 @@ function construct_optimization_problem(
 end
 
 function construct_optimization_problem(
-    ouq_sys::OUQSystem{<:ProbabilityObjective,StengerCanonicalMoments},
-    parammap,
-    ::OptimizationModel,
-    ::Symbolic;
-    kwargs...,
-)
-    @error "Probability case not implemented yet"
-    # This was not very promising, so probably wont do it. 
+        ouq_sys::OUQSystem{<:ProbabilityObjective, StengerCanonicalMoments},
+        parammap,
+        ::OptimizationModel,
+        ::Symbolic;
+        kwargs...,
+    )
+    return @error "Probability case not implemented yet"
+    # This was not very promising, so probably wont do it.
 end
 
 function construct_optimization_problem(
-    ouq_sys::OUQSystem{
-        <:Union{ProbabilityObjective,ExpectationObjective},
-        StengerCanonicalMoments,
-    },
-    parammap,
-    ::OptimizationModel,
-    ::Oracle;
-    adtype::AbstractADType = SciMLBase.NoAD(),
-    kwargs...,
-)
+        ouq_sys::OUQSystem{
+            <:Union{ProbabilityObjective, ExpectationObjective},
+            StengerCanonicalMoments,
+        },
+        parammap,
+        ::OptimizationModel,
+        ::Oracle;
+        adtype::AbstractADType = SciMLBase.NoAD(),
+        kwargs...,
+    )
     _raw_moments_map = raw_moments_map(ouq_sys)
     _p_free_map = p_free_map(ouq_sys)
     _p_frees_vec = reduce(vcat, values(_p_free_map))
@@ -190,8 +190,8 @@ function construct_optimization_problem(
     # Note: The parammap substitution is written for efficiency and does not fully follow the spirit of OptimizationProblem.
     # The idea is by the time we get here, we assume the parammap is already final
     # So I substitute it right away, so OptimizationProblem does not know there are parameters.
-    # This is only for the oracle case. 
-    # And we only have the oracle case for canonical moments. 
+    # This is only for the oracle case.
+    # And we only have the oracle case for canonical moments.
     paramsdefs_map = Dict(k => ModelingToolkit.getdefault(k) for k in ouq_sys.parameters)
     if !isa(parammap, SciMLBase.NullParameters)
         parammap = merge(paramsdefs_map, parammap)
@@ -221,7 +221,7 @@ function construct_optimization_problem(
     constituent_random_variables = reduce(
         vcat,
         ouq_sys.admissible_set.random_variable_map[group_name] for
-        group_name in group_names
+            group_name in group_names
     )
     num_groups = length(group_names)
     num_groups == length(keys(_raw_moments_map)) ||
@@ -232,7 +232,7 @@ function construct_optimization_problem(
     else
         induced_discrete_measure_func =
             (discrete_measure_vec) ->
-                ProductDiscreteMeasure([discrete_measure_vec[i] for i = 1:num_groups])
+        ProductDiscreteMeasure([discrete_measure_vec[i] for i in 1:num_groups])
     end
 
     group_num_decision_vars = map(length, values(_p_free_map))
@@ -240,19 +240,19 @@ function construct_optimization_problem(
     if all(x -> x == group_num_decision_vars[1], group_num_decision_vars) # All groups have the same number of constraints and decision variables, formulate a matrix
         partition =
             (p_frees_cand) -> transpose(
-                reshape(
-                    p_frees_cand,
-                    group_num_decision_vars[1],
-                    length(group_num_decision_vars),
-                ),
-            )
+            reshape(
+                p_frees_cand,
+                group_num_decision_vars[1],
+                length(group_num_decision_vars),
+            ),
+        )
     else
         error("This is most likely implemented incorrectly")
         partition =
             (p_frees_cand) -> [
-                view(p_frees_cand, 1:cumsum(group_num_decision_vars)[i]) for
-                i = 1:length(group_num_decision_vars)
-            ] # else, formulate a vector of vectors
+            view(p_frees_cand, 1:cumsum(group_num_decision_vars)[i]) for
+                i in 1:length(group_num_decision_vars)
+        ] # else, formulate a vector of vectors
         @warn "Not well tested"
     end
 
@@ -262,14 +262,14 @@ function construct_optimization_problem(
         # TODO: Dispatch on Probability Function approximation here.
         ouq_obj_f =
             (rand_var_vec) -> Symbolics.evaluate(
-                condition,
-                Dict(constituent_random_variables .=> rand_var_vec),
-            )
+            condition,
+            Dict(constituent_random_variables .=> rand_var_vec),
+        )
     elseif isa(ouq_sys.objective, ExpectationObjective)
         #expectation_rule = @rule 𝔼(~f) => expectation((single_support) -> substitute(~f, Dict(constituent_random_variables .=> single_support)), discrete_measure)
         extract_f_rule = @rule 𝔼(~f) =>
             (rand_var_vec) ->
-                substitute(~f, Dict(constituent_random_variables .=> rand_var_vec))
+        substitute(~f, Dict(constituent_random_variables .=> rand_var_vec))
         # QN: Will variables always be passed in right order? Should be correct since this order is preserved in getting the induced_discrete_measure.
         ouq_obj_f = simplify(obj_expression; rewriter = extract_f_rule)
     else
@@ -277,15 +277,15 @@ function construct_optimization_problem(
     end
 
 
-    # Closure for objective function: 
-    function objective_f(p_frees_cand, ps) # Functions may be faster than higher order functions    
+    # Closure for objective function:
+    function objective_f(p_frees_cand, ps) # Functions may be faster than higher order functions
         _partitioned_p_frees = partition(p_frees_cand)
         _discrete_measure_vec = [
             f(row) for
-            (f, row) in zip(transform_functors_vec, eachrow(_partitioned_p_frees))
+                (f, row) in zip(transform_functors_vec, eachrow(_partitioned_p_frees))
         ]
         _joint_law_pdm = induced_discrete_measure_func(_discrete_measure_vec)
-        expectation(ouq_obj_f, _joint_law_pdm)
+        return expectation(ouq_obj_f, _joint_law_pdm)
     end
 
     opt_f = OptimizationFunction(objective_f, adtype; kwargs...)
@@ -297,7 +297,7 @@ function construct_optimization_problem(
         ub = ones(total_num_decision_vars),
         kwargs...,
     )
-    debug_info = Dict{Symbol,Any}(
+    debug_info = Dict{Symbol, Any}(
         :objective_f => objective_f,
         :decision_vars => _p_frees_vec,
         :decision_vars_cand => _p_frees_cand,
@@ -308,15 +308,15 @@ function construct_optimization_problem(
 end
 
 function construct_optimization_problem(
-    ouq_sys::OUQSystem{
-        <:Union{ProbabilityObjective,ExpectationObjective},
-        StengerCanonicalMoments,
-    },
-    parammap,
-    ::JuMPModel,
-    oracle_or_symbolic::Symbolic;
-    kwargs...,
-)
+        ouq_sys::OUQSystem{
+            <:Union{ProbabilityObjective, ExpectationObjective},
+            StengerCanonicalMoments,
+        },
+        parammap,
+        ::JuMPModel,
+        oracle_or_symbolic::Symbolic;
+        kwargs...,
+    )
     if !isa(parammap, SciMLBase.NullParameters)
         error("Parameter map not supported for JuMPModel")
     end
@@ -326,7 +326,7 @@ function construct_optimization_problem(
     _symbolic_decision_vars = extract_decision_vars(_discrete_measure_map)
     optim_to_jump_dict = add_optim_vars!(optim_model, _symbolic_decision_vars)
 
-    # Use the Winkler methods: 
+    # Use the Winkler methods:
     (; induced_discrete_measure, reduced_objective) = convert_objective!(
         optim_model,
         ouq_sys,

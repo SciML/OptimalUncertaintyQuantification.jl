@@ -1,0 +1,17 @@
+name: "Format Check"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format-check:
+    name: "Runic Format Check"
+    uses: "SciML/.github/.github/workflows/runic.yml@v1"
+    secrets: "inherit"

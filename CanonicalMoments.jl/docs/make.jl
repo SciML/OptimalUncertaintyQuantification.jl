@@ -12,7 +12,7 @@ makedocs(;
     modules = [CanonicalMoments],
     authors = "TODO",
     sitename = "CanonicalMoments.jl",
-    format = Documenter.HTML(;),
+    format = Documenter.HTML(),
     pages = ["Home" => "index.md"],
 )
 #=

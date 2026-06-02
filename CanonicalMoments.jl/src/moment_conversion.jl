@@ -13,8 +13,8 @@ This function calculates the ζ sequence [1, pg viii] from a vector of canonical
 function _ζ(p)
     ζ = similar(p)
     ζ[1] = p[1]
-    for k = 2:length(p)
-        ζ[k] = (1 - p[k-1]) * p[k] # Dette pg viii
+    for k in 2:length(p)
+        ζ[k] = (1 - p[k - 1]) * p[k] # Dette pg viii
     end
     return ζ
 end
@@ -38,8 +38,8 @@ This function implements the transformation of center for moments.  Given a sequ
 """
 function _moment_center_transform(sequence, a, b)
     n = length(sequence)
-    mapreduce(+, 1:n; init = (a-b)^n) do i
-        binomial(n, i) * sequence[i] * (a-b)^(n-i)
+    return mapreduce(+, 1:n; init = (a - b)^n) do i
+        binomial(n, i) * sequence[i] * (a - b)^(n - i)
     end
 end
 
@@ -59,7 +59,7 @@ This function applies the center transformation to each moment in the input sequ
 - A vector of moments centered around `b`, with the same length as the input `sequence`.
 """
 function _sequence_center_transform(sequence, a, b)
-    map(eachindex(sequence)) do n
+    return map(eachindex(sequence)) do n
         @views _moment_center_transform(sequence[1:n], a, b)
     end
 end
@@ -81,7 +81,7 @@ This function transforms raw moments, defined on the interval `[lb, ub]`, to mom
 [1] Dette, H., and Studden, W. J. (1997). The Theory of Canonical Moments with Applications in Statistics, Probability, and Analysis. Wiley-Interscience, New York. 
 """
 function _raw2normed(moments, lb, ub)
-    map(moments, eachindex(moments)) do _, n
+    return map(moments, eachindex(moments)) do _, n
         s = mapreduce(+, 1:n, moments) do j, mj
             binomial(n, j) * (-lb)^(n - j) * mj
         end
@@ -103,7 +103,7 @@ This function performs the inverse transformation of _raw2normed, converting mom
 A vector of raw moments on the interval [lb, ub].
 """
 function _normed2raw(moments, lb, ub)
-    map(moments, eachindex(moments)) do _, n
+    return map(moments, eachindex(moments)) do _, n
         s = mapreduce(+, 1:n, moments) do j, mj
             binomial(n, j) * (ub - lb)^j * lb^(n - j) * mj
         end
@@ -129,7 +129,7 @@ This function transforms a sequence of raw moments on the unit interval to canon
 function _normed2canonical(nrms)
     # TODO improve container type
     N = length(nrms)
-    if N == 1
+    return if N == 1
         [first(nrms)]
     elseif N == 2
         [first(nrms), _p2(nrms)]
@@ -168,22 +168,22 @@ function QD(c)
     #TODO rewrite... ported from Stenger code.
     c̄ = vcat(1, c)
     rg = length(c)
-    Mat = [zeros(rg), [c̄[i+1] / c̄[i] for i = 1:(rg)]]
-    for i = 3:(rg+1)
+    Mat = [zeros(rg), [c̄[i + 1] / c̄[i] for i in 1:(rg)]]
+    for i in 3:(rg + 1)
         if i % 2 == 1
             push!(
                 Mat,
                 [
-                    Mat[i-1][t+1] - Mat[i-1][t] + Mat[i-2][t+1] for
-                    t = 1:(length(Mat[i-1])-1)
+                    Mat[i - 1][t + 1] - Mat[i - 1][t] + Mat[i - 2][t + 1] for
+                        t in 1:(length(Mat[i - 1]) - 1)
                 ],
             )
         else
             push!(
                 Mat,
                 [
-                    Mat[i-1][t+1] / Mat[i-1][t] * Mat[i-2][t+1] for
-                    t = 1:(length(Mat[i-1])-1)
+                    Mat[i - 1][t + 1] / Mat[i - 1][t] * Mat[i - 2][t + 1] for
+                        t in 1:(length(Mat[i - 1]) - 1)
                 ],
             )
         end
@@ -191,12 +191,12 @@ function QD(c)
     # for i in eachindex(Mat)
     #     println("$(Mat[i])\n")
     # end
-    ζ = [Mat[i][1] for i = 2:(length(Mat))]
+    ζ = [Mat[i][1] for i in 2:(length(Mat))]
     # @show ζ
     p = similar(ζ)
     p[1] = ζ[1]
-    for i = 2:(length(ζ))
-        p[i] = ζ[i] / (1 - p[i-1])
+    for i in 2:(length(ζ))
+        p[i] = ζ[i] / (1 - p[i - 1])
     end
     return p
 end

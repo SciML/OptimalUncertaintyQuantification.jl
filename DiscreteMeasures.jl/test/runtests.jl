@@ -27,7 +27,7 @@ end
     pdms = ProductDiscreteMeasure(dms)
     @test marginals(pdms) == dms
     @test support(pdms) == vec([[a, b] for a in first(x), b in last(x)])
-    @test weights(pdms) == vec([a*b for a in first(w), b in last(w)])
+    @test weights(pdms) == vec([a * b for a in first(w), b in last(w)])
 
     x2 = [-1.0, -2.0]
     w2 = [100.0, 200.0]
@@ -36,21 +36,21 @@ end
     pdms2 = ProductDiscreteMeasure(pdms, dm2)
     @test marginals(pdms2) == [dms; dm2]
     @test support(pdms2) == vec([[a, b, c] for a in first(x), b in last(x), c in x2])
-    @test weights(pdms2) == vec([a*b*c for a in first(w), b in last(w), c in w2])
+    @test weights(pdms2) == vec([a * b * c for a in first(w), b in last(w), c in w2])
 
     pdms3 = ProductDiscreteMeasure(pdms, dms)
     @test marginals(pdms3) == [dms; dms]
     @test support(pdms3) ==
-          vec([[a, b, c, d] for a in first(x), b in last(x), c in first(x), d in last(x)])
+        vec([[a, b, c, d] for a in first(x), b in last(x), c in first(x), d in last(x)])
     @test weights(pdms3) ==
-          vec([a*b*c*d for a in first(w), b in last(w), c in first(w), d in last(w)])
+        vec([a * b * c * d for a in first(w), b in last(w), c in first(w), d in last(w)])
 
     dm1d = DiscreteMeasure(first(x), first(w))
     dm3d = DiscreteMeasure(x, w3d)
     pdms = ProductDiscreteMeasure([dm3d, dm1d])
     @test marginals(pdms) == [dm3d; dm1d]
     @test support(pdms) == vec([vcat(a, b) for a in support(dm3d), b in support(dm1d)])
-    @test weights(pdms) == vec([a*b for a in weights(dm3d), b in weights(dm1d)])
+    @test weights(pdms) == vec([a * b for a in weights(dm3d), b in weights(dm1d)])
 
     @testset "Product of single DiscreteMeasure" begin
         dm = DiscreteMeasure(x, w3d)

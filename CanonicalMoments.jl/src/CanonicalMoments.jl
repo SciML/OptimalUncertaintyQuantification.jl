@@ -11,7 +11,7 @@ import DiscreteMeasures: support, weights
 import Polynomials: denominator, numerator
 
 function DEFAULT_ROOT_SOLVER(C, args...; kwargs...)
-    if length(C) == 3      # 2nd order
+    return if length(C) == 3      # 2nd order
         quadratic_eq_sridhare(C, args...; kwargs...)
     elseif length(C) == 4  # 3rd order
         simple_real_cubic_eq(C, args...; kwargs...)
