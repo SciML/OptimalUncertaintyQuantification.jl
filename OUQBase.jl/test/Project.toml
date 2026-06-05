@@ -4,3 +4,8 @@ OUQBase = "01930cae-99d2-7439-8f4f-ace2ece9f1b9"
 OptimizationBBO = "3e6eede4-6085-4f62-9a71-46d9bc1eb92b"
 Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[compat]
+ModelingToolkit = "11.26.7"
+OptimizationBBO = "0.4.7"
+Symbolics = "7.26.0"
