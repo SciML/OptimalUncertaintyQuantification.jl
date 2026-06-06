@@ -24,6 +24,6 @@ IntervalArithmeticExt = "IntervalArithmetic"
 SymbolicsExt = "Symbolics"
 
 [compat]
-IntervalArithmetic = "0.16 - 0.20, =0.20.9"
+IntervalArithmetic = "0.18 - 0.20, =0.20.9"
 Reexport = "1.2.2"
 Symbolics = "6.29.2"

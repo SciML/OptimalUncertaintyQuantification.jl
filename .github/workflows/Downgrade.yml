@@ -1,0 +1,34 @@
+name: "Downgrade"
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  downgrade:
+    name: "Downgrade ${{ matrix.project }} on Julia 1.10"
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - CanonicalMoments.jl
+          - DiscreteMeasures.jl
+          - OUQBase.jl
+    uses: "SciML/.github/.github/workflows/downgrade.yml@v1"
+    with:
+      julia-version: "1.10"
+      project: "${{ matrix.project }}"
+      projects: "${{ matrix.project }}"
+    secrets: "inherit"

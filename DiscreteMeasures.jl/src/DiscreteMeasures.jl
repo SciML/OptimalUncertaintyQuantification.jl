@@ -31,7 +31,7 @@ struct DiscreteMeasure{𝕋, 𝕏, 𝕎} <: AbstractDiscreteMeasure
 
     function DiscreteMeasure(x::𝕏, w::𝕎) where {𝕋, 𝕏 <: AbstractVector{𝕋}, 𝕎 <: AbstractVector}
         @assert length(w) == length(x)
-        @assert allequal(length, x)
+        @assert allequal(length.(x))
         return new{𝕋, 𝕏, 𝕎}(length(first(x)), x, w)
     end
 end
