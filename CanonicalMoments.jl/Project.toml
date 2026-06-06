@@ -24,6 +24,15 @@ IntervalArithmeticExt = "IntervalArithmetic"
 SymbolicsExt = "Symbolics"
 
 [compat]
+julia = "1.10"
+DiscreteMeasures = "0.1"
+LinearAlgebra = "1.10"
+Polynomials = "4"
+RecurrenceRelationships = "0.2"
+Statistics = "1.10"
 IntervalArithmetic = "0.18 - 0.20, =0.20.9"
 Reexport = "1.2.2"
 Symbolics = "6.29.2"
+
+[sources]
+DiscreteMeasures = { path = "../DiscreteMeasures.jl" }
