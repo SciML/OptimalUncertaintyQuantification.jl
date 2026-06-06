@@ -28,6 +28,7 @@ jobs:
           - OUQBase.jl
     uses: "SciML/.github/.github/workflows/downgrade.yml@v1"
     with:
+      allow-reresolve: true
       julia-version: "1.10"
       project: "${{ matrix.project }}"
       projects: "${{ matrix.project }}"
