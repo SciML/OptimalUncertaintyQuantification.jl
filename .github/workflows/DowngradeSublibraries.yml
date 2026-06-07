@@ -1,0 +1,27 @@
+name: Downgrade Sublibraries
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+jobs:
+  downgrade-sublibraries:
+    name: "Downgrade Sublibraries"
+    uses: "SciML/.github/.github/workflows/sublibrary-downgrade.yml@v1"
+    secrets: "inherit"
+    with:
+      julia-version: "1.10"
+      skip: "Pkg,TOML"
+      allow-reresolve: false

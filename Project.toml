@@ -1,6 +1,6 @@
 [workspace]
 projects = [
-    "CanonicalMoments.jl", 
-    "DiscreteMeasures.jl", 
-    "OUQBase.jl"
+    "lib/CanonicalMoments",
+    "lib/DiscreteMeasures",
+    "lib/OUQBase"
 ]

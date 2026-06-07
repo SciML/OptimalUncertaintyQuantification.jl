@@ -17,5 +17,5 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [sources]
 CanonicalMoments = {path = ".."}
-IntervalEigenSolvers = {path = "../../IntervalEigenSolvers.jl"}
-DiscreteMeasures = {path = "../../DiscreteMeasures.jl"}
+IntervalEigenSolvers = {path = "../../../IntervalEigenSolvers.jl"}
+DiscreteMeasures = {path = "../DiscreteMeasures"}

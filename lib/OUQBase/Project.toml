@@ -31,8 +31,8 @@ SciMLBase = "2.153"
 Symbolics = "6.39.1"
 
 [sources]
-CanonicalMoments = { path = "../CanonicalMoments.jl" }
-DiscreteMeasures = { path = "../DiscreteMeasures.jl" }
+CanonicalMoments = { path = "../CanonicalMoments" }
+DiscreteMeasures = { path = "../DiscreteMeasures" }
 
 [workspace]
 projects = ["test"]
