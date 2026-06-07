@@ -1,12 +1,12 @@
-# using OptimalUncertaintyQuantification
-using CanonicalMoments
 using SafeTestsets
 using Test
 
-# @run_package_tests verbose = true
+const TEST_GROUP = get(ENV, "OPTIMALUNCERTAINTYQUANTIFICATION_TEST_GROUP", "ALL")
 
-@safetestset "Orthogonal Polynomial Roots" include("orthopoly_roots.jl")
-@safetestset "Moment Sequence" include("moment_sequence.jl")
+if TEST_GROUP == "Core" || TEST_GROUP == "ALL"
+    @safetestset "Orthogonal Polynomial Roots" include("orthopoly_roots.jl")
+    @safetestset "Moment Sequence" include("moment_sequence.jl")
+end
 
 # @safetestset "Root Domain Restriction" begin
 #     using IntervalArithmetic
@@ -57,7 +57,7 @@ using Test
 #     for (c, setup) in zip((c1, c2, c3), (setup1, setup2, setup3))
 #         for _setup in setup
 #             p = _setup.free
-#             for (lb, ub, _c, _p) in zip(ql, qu, c, p)
+#             for (lb, ub, _c, _p) in zip(ql, qu, c, p)
 #                 can = moments_to_canonical(lb, ub, _c, _p)
 #                 @test all(@. 0 ≤ can ≤ 1)
 

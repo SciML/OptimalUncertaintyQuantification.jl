@@ -1,5 +1,4 @@
-name: Downgrade Sublibraries
-
+name: Downgrade
 on:
   pull_request:
     branches:
@@ -11,19 +10,17 @@ on:
       - main
     paths-ignore:
       - 'docs/**'
-
 concurrency:
+  # Skip intermediate builds: always.
+  # Cancel intermediate builds: only if it is a pull request build.
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
-
 jobs:
-  downgrade-sublibraries:
-    name: "Downgrade Sublibraries"
-    uses: "SciML/.github/.github/workflows/sublibrary-downgrade.yml@v1"
-    secrets: "inherit"
+  test:
+    name: "Downgrade"
+    uses: "SciML/.github/.github/workflows/downgrade.yml@v1"
     with:
       julia-version: "1.10"
+      group: "Core"
       skip: "Pkg,TOML,Test,Statistics,LinearAlgebra,SparseArrays,InteractiveUtils,CanonicalMoments,DiscreteMeasures,OUQBase"
-      group-env-name: "OPTIMALUNCERTAINTYQUANTIFICATION_TEST_GROUP"
-      group-env-value: "Core"
-      # Every lib/* sublibrary is downgrade-tested (projects auto-discovered, no exclusions).
+    secrets: "inherit"
