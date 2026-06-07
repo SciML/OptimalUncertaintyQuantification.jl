@@ -8,14 +8,14 @@ updates:
   - package-ecosystem: "julia"
     directories:
       - "/"
-      - "/CanonicalMoments.jl"
-      - "/CanonicalMoments.jl/docs"
-      - "/CanonicalMoments.jl/examples"
-      - "/CanonicalMoments.jl/test"
-      - "/DiscreteMeasures.jl"
-      - "/DiscreteMeasures.jl/docs"
-      - "/OUQBase.jl"
-      - "/OUQBase.jl/test"
+      - "/lib/CanonicalMoments"
+      - "/lib/CanonicalMoments/docs"
+      - "/lib/CanonicalMoments/examples"
+      - "/lib/CanonicalMoments/test"
+      - "/lib/DiscreteMeasures"
+      - "/lib/DiscreteMeasures/docs"
+      - "/lib/OUQBase"
+      - "/lib/OUQBase/test"
     schedule:
       interval: "daily"
     groups:

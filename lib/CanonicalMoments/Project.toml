@@ -35,4 +35,4 @@ Reexport = "1.2.2"
 Symbolics = "6.29.2"
 
 [sources]
-DiscreteMeasures = { path = "../DiscreteMeasures.jl" }
+DiscreteMeasures = { path = "../DiscreteMeasures" }
