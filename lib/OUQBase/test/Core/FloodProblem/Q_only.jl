@@ -99,12 +99,16 @@ isdefined(Main, :probability_canonical_moments_problems_analytic) && push!(
 isdefined(Main, :probability_solutions) &&
     push!(probability_solutions, "Flood Q only" => 0.17)
 
-# Hacky test for now:
-ouq_prob = OUQProblem(ouq_sys_probability_canonical_moments, OptimizationModel(), Oracle())
-sol = solve(
-    ouq_prob.optim_model,
-    BBO_adaptive_de_rand_1_bin_radiuslimited();
-    maxiters = 100,
-    maxtime = 60.0,
-    verbose = true,
-)
+# Smoke-solve the probability problem. Skipped when this file is loaded only as
+# a problem fixture (the all_problems.jl aggregator sets this flag) so the
+# expensive solve runs once, from its own test group entry.
+if !(isdefined(Main, :LOAD_OUQ_PROBLEMS_FIXTURE) && Main.LOAD_OUQ_PROBLEMS_FIXTURE)
+    ouq_prob = OUQProblem(ouq_sys_probability_canonical_moments, OptimizationModel(), Oracle())
+    sol = solve(
+        ouq_prob.optim_model,
+        BBO_adaptive_de_rand_1_bin_radiuslimited();
+        maxiters = 100,
+        maxtime = 60.0,
+        verbose = true,
+    )
+end

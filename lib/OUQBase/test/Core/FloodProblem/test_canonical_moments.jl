@@ -1,7 +1,7 @@
 using CanonicalMoments, ModelingToolkit
 using OUQBase
 
-include(joinpath(@__DIR__, "../../../Problems/all_problems.jl"))
+include(joinpath(@__DIR__, "..", "..", "Problems", "all_problems.jl"))
 
 name = "Flood full independent"
 ouq_sys = probability_canonical_moments_problems[name]
