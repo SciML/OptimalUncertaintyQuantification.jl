@@ -3,6 +3,7 @@ using OUQBase
 using CanonicalMoments
 using DiscreteMeasures
 
+mkpath(joinpath(@__DIR__, "src", "assets"))
 cp(joinpath(@__DIR__, "Project.toml"), joinpath(@__DIR__, "src", "assets", "Project.toml"), force = true)
 
 # Keep pages.jl separate for the DiffEqDocs.jl build
