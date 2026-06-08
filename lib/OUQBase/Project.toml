@@ -20,19 +20,33 @@ SymbolicUtils = "d1185830-fcd6-423d-90d6-eec64667417b"
 Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
 
 [compat]
+julia = "1.10"
+CanonicalMoments = "0.1"
+DiscreteMeasures = "0.1"
 DomainSets = "0.7.15"
 JuMP = "1.23.6"
 ModelingToolkit = "9.69"
 NaNMath = "1.1.3"
+Optimization = "5"
+OptimizationBBO = "0.4"
 OrderedCollections = "1.7.0"
+PolynomialRoots = "1"
 Polynomials = "4.0.13"
 Reexport = "1.2.2"
 SciMLBase = "2.153"
+SafeTestsets = "0.1"
+SymbolicUtils = "3"
 Symbolics = "6.39.1"
+Test = "1.10"
 
 [sources]
 CanonicalMoments = { path = "../CanonicalMoments" }
 DiscreteMeasures = { path = "../DiscreteMeasures" }
 
-[workspace]
-projects = ["test"]
+[extras]
+OptimizationBBO = "3e6eede4-6085-4f62-9a71-46d9bc1eb92b"
+SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["OptimizationBBO", "SafeTestsets", "Test"]

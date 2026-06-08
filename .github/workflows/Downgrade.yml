@@ -1,5 +1,4 @@
-name: Sublibrary CI
-
+name: Downgrade
 on:
   pull_request:
     branches:
@@ -11,15 +10,15 @@ on:
       - main
     paths-ignore:
       - 'docs/**'
-
 concurrency:
+  # Skip intermediate builds: always.
+  # Cancel intermediate builds: only if it is a pull request build.
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
-
 jobs:
-  sublibraries:
-    uses: "SciML/.github/.github/workflows/sublibrary-project-tests.yml@v1"
+  test:
+    name: "Downgrade"
+    uses: "SciML/.github/.github/workflows/downgrade.yml@v1"
     with:
-      group-env-name: OPTIMALUNCERTAINTYQUANTIFICATION_TEST_GROUP
-      check-bounds: auto
+      group: "Core"
     secrets: "inherit"

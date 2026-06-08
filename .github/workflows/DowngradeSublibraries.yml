@@ -22,5 +22,6 @@ jobs:
     uses: "SciML/.github/.github/workflows/sublibrary-downgrade.yml@v1"
     secrets: "inherit"
     with:
-      julia-version: "1.10"
-      skip: "Pkg,TOML"
+      group-env-name: "OPTIMALUNCERTAINTYQUANTIFICATION_TEST_GROUP"
+      group-env-value: "Core"
+      # Every lib/* sublibrary is downgrade-tested (projects auto-discovered, no exclusions).

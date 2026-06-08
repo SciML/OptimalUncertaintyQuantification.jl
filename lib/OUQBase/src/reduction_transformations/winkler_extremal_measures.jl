@@ -51,7 +51,7 @@ end
 # We need to provide:
 # 1) right DiscreteMeasure/ProductDiscreteMeasure and the right set of full random variable group the random variable of the constraint belongs to.
 # 2) right optim_vars_sub
-# Possible other things like dispatch on reduction_algorithm or backen d, but for now it is JuMP and WinklerExtremalMeasures.
+# Possible other things like dispatch on reduction_algorithm or backend, but for now it is JuMP and WinklerExtremalMeasures.
 # We can rewrite it using map_vars_to_group.
 # 1D case:
 
@@ -186,7 +186,7 @@ function convert_objective!(
         jump_on_var = @variable(optim_model, binary = true)
         #var_name = Symbol(:x, group_name, i, :_on)
         var_name = Symbol(:on, i)
-        set_name(jump_on_var, String(var_name)) # Binary indicator variable: 1 if support point i satisified probability condition
+        set_name(jump_on_var, String(var_name)) # Binary indicator variable: 1 if support point i satisfied probability condition
         optim_model[var_name] = jump_on_var
 
         #support_to_jump_binary_dict[substitute(support(discrete_measure)[i], optim_to_jump_dict)] = jump_on_var
@@ -298,7 +298,7 @@ function construct_optimization_problem(
     _discrete_measure_map =
         discrete_measure_map(ouq_sys, ouq_sys.reduction_data, Symbolic())
     # We want flat vectors even in multidimensional DM cases:
-    # This may fail if you have a product measure of discrete measures of multiple random varaibles.
+    # This may fail if you have a product measure of discrete measures of multiple random variables.
     weight_vars, support_vars =
         collect(flatten(flatten(weights.(values(_discrete_measure_map))))),
         collect(flatten(flatten(support.(values(_discrete_measure_map))))) # TODO: Modify to use `extract_decision_vars`

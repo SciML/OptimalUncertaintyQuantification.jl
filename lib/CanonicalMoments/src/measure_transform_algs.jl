@@ -12,7 +12,7 @@ Base.show(io::IO, alg::AbstractSupportAlg) = print(io, "support_alg")
 """
     PolyRootsSupportAlg <: AbstractSupportAlg
 
-An algorithm for computing the support of a measure by finding the roots of the denominator of teh Stieltjes transform. See Eq. 3.6.3 [1]. The default solver is set to `DEFAULT_ROOT_SOLVER`.
+An algorithm for computing the support of a measure by finding the roots of the denominator of the Stieltjes transform. See Eq. 3.6.3 [1]. The default solver is set to `DEFAULT_ROOT_SOLVER`.
 
 Note, that the polynomial is guaranteed to have real, unique roots. 
 

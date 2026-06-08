@@ -137,7 +137,7 @@ end
 
 Checks if the distribution represented by the canonical moment sequence is symmetric around its mean.
 
-This uses the property that odd-numbered canonical moments are ``1/2`` for symmetric distributions. See Corrollary 1.3.4 of [1].
+This uses the property that odd-numbered canonical moments are ``1/2`` for symmetric distributions. See Corollary 1.3.4 of [1].
 
 [1] Dette, H., and Studden, W. J., “The Theory of Canonical Moments with Applications in Statistics, Probability, and Analysis,” Wiley-Interscience, New York, 1997.
 

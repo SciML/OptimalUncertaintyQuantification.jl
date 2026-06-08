@@ -1,6 +1,31 @@
-[workspace]
-projects = [
-    "lib/CanonicalMoments",
-    "lib/DiscreteMeasures",
-    "lib/OUQBase"
-]
+name = "OptimalUncertaintyQuantification"
+uuid = "91ab1271-1799-4997-981e-07ad84422b0d"
+authors = ["Avinash Subramanian (JuliaHub), Benjamin Chung (JuliaHub), Adam Gerlach (AFRL)"]
+version = "0.1.0"
+
+[deps]
+CanonicalMoments = "58d2c334-1a3c-4862-bb37-9012b9e58a38"
+DiscreteMeasures = "7766d772-2108-41ee-a4bd-11c51440a39b"
+OUQBase = "01930cae-99d2-7439-8f4f-ace2ece9f1b9"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+
+[sources]
+CanonicalMoments = { path = "lib/CanonicalMoments" }
+DiscreteMeasures = { path = "lib/DiscreteMeasures" }
+OUQBase = { path = "lib/OUQBase" }
+
+[compat]
+julia = "1.10"
+CanonicalMoments = "0.1"
+DiscreteMeasures = "0.1"
+OUQBase = "0.1"
+Reexport = "1.2.2"
+SafeTestsets = "0.1"
+
+[extras]
+Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Pkg", "SafeTestsets", "Test"]

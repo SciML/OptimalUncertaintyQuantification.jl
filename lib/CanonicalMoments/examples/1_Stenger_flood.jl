@@ -45,7 +45,7 @@ pof_ = pof(ql, qu, c1, g_h(2), p1_free)
 pof2_ = pof(ql, qu, c2, g_h(2), p2_free)
 
 ## Compare to Stenger
-### 1 Moment Contstraint
+### 1 Moment Constraint
 threshold = 4
 p1_free = [fill(0.5, 2) for i in 1:4]
 pof_ = pof(ql, qu, c1, g_h(threshold), p1_free)

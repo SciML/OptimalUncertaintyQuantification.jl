@@ -21,8 +21,8 @@ raws = [
     [54.5, 8911 / 3.0, 647569 / 4.0], #Zm
 ]
 
-raw_seqences = RawMomentSequence.(raws, lb, ub)
-transforms = DiscreteMeasureTransform1.(raw_seqences)
+raw_sequences = RawMomentSequence.(raws, lb, ub)
+transforms = DiscreteMeasureTransform1.(raw_sequences)
 
 p_frees = fill.([0.1, 0.2, 0.3, 0.4], length.(raws) .+ 1)
 
