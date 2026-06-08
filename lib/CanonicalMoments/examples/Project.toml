@@ -19,3 +19,16 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 CanonicalMoments = {path = ".."}
 IntervalEigenSolvers = {path = "../../../IntervalEigenSolvers.jl"}
 DiscreteMeasures = {path = "../DiscreteMeasures"}
+[compat]
+FiniteDiff = "2.31.0"
+ForwardDiff = "1.4.0"
+IntervalArithmetic = "1.0.9"
+IntervalLinearAlgebra = "0.1.6"
+MakieCore = "0.10.0"
+Optimization = "5.6.1"
+OptimizationOptimJL = "0.4.14"
+PolynomialRoots = "1.0.0"
+Polynomials = "4.1.1"
+RealPolynomialRoots = "0.1.2"
+SpecialMatrices = "3.1.0"
+StaticArrays = "1.9.18"
