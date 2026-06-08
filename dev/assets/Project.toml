@@ -9,7 +9,7 @@ OptimalUncertaintyQuantification = "91ab1271-1799-4997-981e-07ad84422b0d"
 CanonicalMoments = {path = "../lib/CanonicalMoments"}
 DiscreteMeasures = {path = "../lib/DiscreteMeasures"}
 OUQBase = {path = "../lib/OUQBase"}
-OptimalUncertaintyQuantification = {path = "/home/runner/work/OptimalUncertaintyQuantification.jl/OptimalUncertaintyQuantification.jl"}
+OptimalUncertaintyQuantification = {path = "/home/chrisrackauckas/github-runners/deepsea4-13/_work/OptimalUncertaintyQuantification.jl/OptimalUncertaintyQuantification.jl"}
 
 [compat]
 CanonicalMoments = "0.1"
