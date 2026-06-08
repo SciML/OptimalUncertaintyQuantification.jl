@@ -1,0 +1,19 @@
+[deps]
+CanonicalMoments = "58d2c334-1a3c-4862-bb37-9012b9e58a38"
+DiscreteMeasures = "7766d772-2108-41ee-a4bd-11c51440a39b"
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+OUQBase = "01930cae-99d2-7439-8f4f-ace2ece9f1b9"
+OptimalUncertaintyQuantification = "91ab1271-1799-4997-981e-07ad84422b0d"
+
+[sources]
+CanonicalMoments = {path = "../lib/CanonicalMoments"}
+DiscreteMeasures = {path = "../lib/DiscreteMeasures"}
+OUQBase = {path = "../lib/OUQBase"}
+OptimalUncertaintyQuantification = {path = ".."}
+
+[compat]
+CanonicalMoments = "0.1"
+DiscreteMeasures = "0.1"
+Documenter = "1"
+OUQBase = "0.1"
+OptimalUncertaintyQuantification = "0.1"

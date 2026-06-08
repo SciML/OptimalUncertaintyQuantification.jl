@@ -22,6 +22,15 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    env:
+      # Pin the depot path so the registry-refresh step and the subsequent
+      # julia-actions/julia-{buildpkg,runtest} steps all read and write the
+      # same depot on self-hosted runners (where the runner may otherwise
+      # inject ~/github-runners/<name>/.julia for some steps but not others,
+      # causing "expected package X to be registered" failures when General is
+      # refreshed into ~/.julia but resolve happens against the per-runner
+      # depot).
+      JULIA_DEPOT_PATH: ~/.julia
     strategy:
       fail-fast: false
       matrix:
@@ -37,7 +46,35 @@ jobs:
       - uses: julia-actions/setup-julia@v3
         with:
           version: ${{ matrix.version }}
-      - uses: julia-actions/cache@v3
+      # Split cache restore/save by event to work around recurring GitHub
+      # Actions cache upload auth failures (Azure SAS "Server failed to
+      # authenticate the request"). PRs only restore from a recent main push
+      # cache; only main push runs write the cache. continue-on-error keeps a
+      # transient cache backend hiccup from flunking an otherwise green job.
+      - name: Cache Julia depot (push only — read+write)
+        if: github.event_name == 'push'
+        uses: julia-actions/cache@v3
+        continue-on-error: true
+        with:
+          cache-compiled: 'false'
+      - name: Cache Julia depot (PR — restore only)
+        if: github.event_name != 'push'
+        uses: actions/cache/restore@v5
+        continue-on-error: true
+        with:
+          path: |
+            ~/.julia/artifacts
+            ~/.julia/packages
+            ~/.julia/registries
+            ~/.julia/scratchspaces
+            ~/.julia/logs
+          # Primary key intentionally won't match (run_id is unique); the
+          # restore-keys prefix matches julia-actions/cache's key scheme
+          # `${cache-name};os=${runner.os};${matrix...}` so we pull the most
+          # recent cache from a main push for this same matrix cell.
+          key: julia-cache;workflow=${{ github.workflow }};job=${{ github.job }};os=${{ runner.os }};group=${{ matrix.group }};version=${{ matrix.version }};run_id=${{ github.run_id }};run_attempt=${{ github.run_attempt }}
+          restore-keys: |
+            julia-cache;workflow=${{ github.workflow }};job=${{ github.job }};os=${{ runner.os }};group=${{ matrix.group }};version=${{ matrix.version }};
       - name: Develop local path deps (Julia < 1.11)
         shell: julia --color=yes --project=. {0}
         run: |
