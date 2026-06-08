@@ -4,8 +4,8 @@ using Test
 const TEST_GROUP = get(ENV, "OPTIMALUNCERTAINTYQUANTIFICATION_TEST_GROUP", "All")
 
 if TEST_GROUP == "Core" || TEST_GROUP == "All"
-    @safetestset "Orthogonal Polynomial Roots" include("orthopoly_roots.jl")
-    @safetestset "Moment Sequence" include("moment_sequence.jl")
+    @safetestset "Orthogonal Polynomial Roots" include("Core/orthopoly_roots.jl")
+    @safetestset "Moment Sequence" include("Core/moment_sequence.jl")
 end
 
 # @safetestset "Root Domain Restriction" begin
@@ -52,7 +52,7 @@ end
 #     using IntervalArithmetic
 #     import OptimalUncertaintyQuantification.CanonicalMoments: moments_to_canonical, canonical_to_position
 
-#     include("stenger_setup.jl")
+#     include("Core/stenger_setup.jl")
 
 #     for (c, setup) in zip((c1, c2, c3), (setup1, setup2, setup3))
 #         for _setup in setup

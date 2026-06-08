@@ -65,6 +65,6 @@ const GROUP = get(ENV, "GROUP", "All")
             Pkg.test(base_group, julia_args = ["--check-bounds=auto", "--compiled-modules=yes", "--depwarn=yes"], force_latest_compatible_version = false, allow_reresolve = true)
         end
     elseif GROUP == "All" || GROUP == "Core"
-        @time @safetestset "Umbrella Load" include("umbrella_load.jl")
+        @time @safetestset "Umbrella Load" include("Core/umbrella_load.jl")
     end
 end # @time

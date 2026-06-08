@@ -38,7 +38,6 @@ jobs:
           - Core
         version:
           - 'lts'
-          - '1.11'
           - '1'
           - 'pre'
     steps:
