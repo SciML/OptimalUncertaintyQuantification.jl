@@ -14,11 +14,11 @@ function simple_real_roots(
 
     P = Polynomial(C)
     numerator = -Polynomial(∂C)
-    denomenator = Polynomials.derivative(P)
+    denominator = Polynomials.derivative(P)
 
     X = root_solver(P)
     return map(X) do xi
-        𝕋(xi, numerator(xi) / denomenator(xi))
+        𝕋(xi, numerator(xi) / denominator(xi))
     end
 end
 
