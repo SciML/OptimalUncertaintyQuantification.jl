@@ -25,7 +25,9 @@ SymbolicsExt = "Symbolics"
 
 [compat]
 julia = "1.10"
+ChainRulesCore = "1"
 DiscreteMeasures = "0.1"
+ForwardDiff = "0.10, 1"
 InteractiveUtils = "1.10"
 IntervalArithmetic = "0.18 - 0.20, =0.20.9"
 LinearAlgebra = "1.10"
