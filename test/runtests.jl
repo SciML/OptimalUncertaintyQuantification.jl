@@ -53,7 +53,13 @@ const GROUP = get(ENV, "GROUP", "All")
         withenv("OPTIMALUNCERTAINTYQUANTIFICATION_TEST_GROUP" => test_group) do
             Pkg.test(base_group, julia_args = ["--check-bounds=auto", "--compiled-modules=yes", "--depwarn=yes"], force_latest_compatible_version = false, allow_reresolve = true)
         end
-    elseif GROUP == "All" || GROUP == "Core"
-        run_tests(; core = () -> @safetestset("Umbrella Load", include("umbrella_load.jl")))
+    elseif GROUP == "All" || GROUP == "Core" || GROUP == "QA"
+        run_tests(;
+            core = () -> @safetestset("Umbrella Load", include("umbrella_load.jl")),
+            # QA (Aqua/JET): dep-adding group in its own sub-env (test/qa), excluded from "All".
+            groups = Dict(
+                "QA" => (; env = joinpath(@__DIR__, "qa"), body = joinpath(@__DIR__, "qa", "qa.jl")),
+            ),
+        )
     end
 end # @time
