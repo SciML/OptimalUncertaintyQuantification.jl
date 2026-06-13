@@ -22,6 +22,10 @@ jobs:
     uses: "SciML/.github/.github/workflows/sublibrary-downgrade.yml@v1"
     secrets: "inherit"
     with:
+      # The sublibrary downgrade resolver passes julia-version straight to
+      # `resolve.jl --julia=`, which requires a numeric registry-compat spec and
+      # rejects the "lts" channel alias. Pin to the numeric sublibrary floor.
+      julia-version: "1.10"
       group-env-name: "OPTIMALUNCERTAINTYQUANTIFICATION_TEST_GROUP"
       group-env-value: "Core"
       # Every lib/* sublibrary is downgrade-tested (projects auto-discovered, no exclusions).
