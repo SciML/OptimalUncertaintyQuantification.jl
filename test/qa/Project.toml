@@ -1,0 +1,24 @@
+[deps]
+Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+CanonicalMoments = "58d2c334-1a3c-4862-bb37-9012b9e58a38"
+DiscreteMeasures = "7766d772-2108-41ee-a4bd-11c51440a39b"
+JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
+OUQBase = "01930cae-99d2-7439-8f4f-ace2ece9f1b9"
+OptimalUncertaintyQuantification = "91ab1271-1799-4997-981e-07ad84422b0d"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[sources]
+CanonicalMoments = {path = "../../lib/CanonicalMoments"}
+DiscreteMeasures = {path = "../../lib/DiscreteMeasures"}
+OUQBase = {path = "../../lib/OUQBase"}
+OptimalUncertaintyQuantification = {path = "../.."}
+
+[compat]
+Aqua = "0.8"
+CanonicalMoments = "0.1"
+DiscreteMeasures = "0.1"
+JET = "0.9, 0.10, 0.11"
+OUQBase = "0.1"
+OptimalUncertaintyQuantification = "0.1"
+Test = "1"
+julia = "1.10"
