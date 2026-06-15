@@ -1,3 +1,5 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 CanonicalMoments = "58d2c334-1a3c-4862-bb37-9012b9e58a38"
+[compat]
+Documenter = "1.17.0"
