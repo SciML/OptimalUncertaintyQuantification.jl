@@ -11,12 +11,14 @@ import DiscreteMeasures: support, weights
 import Polynomials: denominator, numerator
 
 function DEFAULT_ROOT_SOLVER(C, args...; kwargs...)
+    # The closed-form solvers take only the coefficient vector; any extra
+    # args/kwargs are solver options that only the generic fallback consumes.
     return if length(C) == 3      # 2nd order
-        quadratic_eq_sridhare(C, args...; kwargs...)
+        quadratic_eq_sridhare(C)
     elseif length(C) == 4  # 3rd order
-        simple_real_cubic_eq(C, args...; kwargs...)
+        simple_real_cubic_eq(C)
     elseif length(C) == 5  # 4th order
-        simple_real_quartic_eq(C, args...; kwargs...)
+        simple_real_quartic_eq(C)
     else
         Polynomials.roots(Polynomial(C), args...; kwargs...)
     end

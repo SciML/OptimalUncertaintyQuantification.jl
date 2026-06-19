@@ -26,7 +26,7 @@ function get_raw_moment_order(equation::Union{Equation, Inequality}, random_var:
     return order
 end
 
-function CanonicalMoments.RawMomentSequence(
+function build_raw_moment_sequence(
         random_var::Num,
         constraints::Vector{Union{Equation, Inequality}},
     )
@@ -47,7 +47,7 @@ function create_raw_moments_map(admissible_set::AbstractAdmissibleSet)
         length(admissible_set.random_variable_map[k]) == 1 ||
             error("Group is not independent, cannot use canonical moments")
         random_var = only(admissible_set.random_variable_map[k])
-        raw_moments_map[k] = RawMomentSequence(random_var, v)
+        raw_moments_map[k] = build_raw_moment_sequence(random_var, v)
     end
     return raw_moments_map
 end
@@ -93,8 +93,8 @@ function discrete_measure_map(
         ::Symbolic,
     )
     transformed_discrete_measure_map = OrderedDict{Symbol, DiscreteMeasure}()
-    _raw_moments_map = raw_moments_map(ouq_sys)
-    _p_free_map = p_free_map(ouq_sys)
+    _raw_moments_map = reduction_alg.raw_moments_map
+    _p_free_map = reduction_alg.p_free_map
     for (k, v) in constraints_map(ouq_sys)
         transform_functor = DiscreteMeasureTransform1(_raw_moments_map[k])
         transformed_discrete_measure_map[k] = transform_functor(
@@ -271,7 +271,7 @@ function construct_optimization_problem(
             (rand_var_vec) ->
         substitute(~f, Dict(constituent_random_variables .=> rand_var_vec))
         # QN: Will variables always be passed in right order? Should be correct since this order is preserved in getting the induced_discrete_measure.
-        ouq_obj_f = simplify(obj_expression; rewriter = extract_f_rule)
+        ouq_obj_f = Symbolics.simplify(obj_expression; rewriter = extract_f_rule)
     else
         error("Objective is not a ProbabilityObjective or ExpectationObjective")
     end
