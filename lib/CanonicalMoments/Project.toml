@@ -41,7 +41,7 @@ SafeTestsets = "0.1"
 SpecialFunctions = "2"
 StaticArrays = "1"
 Statistics = "1.10"
-Symbolics = "6.29.2"
+Symbolics = "6.29.2, 7.28"
 Test = "1.10"
 
 [sources]
