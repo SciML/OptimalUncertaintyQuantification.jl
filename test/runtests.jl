@@ -56,10 +56,10 @@ const GROUP = get(ENV, "GROUP", "All")
     elseif GROUP == "All" || GROUP == "Core" || GROUP == "QA"
         run_tests(;
             core = () -> @safetestset("Umbrella Load", include("umbrella_load.jl")),
-            # QA (Aqua/JET): dep-adding group in its own sub-env (test/qa), excluded from "All".
-            groups = Dict(
-                "QA" => (; env = joinpath(@__DIR__, "qa"), body = joinpath(@__DIR__, "qa", "qa.jl")),
-            ),
+            # QA (Aqua/JET): dep-adding group in its own sub-env (test/qa). It is the
+            # reserved "QA" group, so it must be passed via the `qa` keyword (the
+            # reserved name is not routed through `groups`).
+            qa = (; env = joinpath(@__DIR__, "qa"), body = joinpath(@__DIR__, "qa", "qa.jl")),
         )
     end
 end # @time
