@@ -149,32 +149,48 @@ struct OUQSystem{A <: ObjectiveType, B <: AbstractReductionAlgorithm, P} <: Abst
     admissible_set::AdmissibleSet
     reduction_data::B
     parameters::P
-    function OUQSystem(;
-            objective,
-            admissible_set,
-            reduction_alg::B,
-            parameters = SciMLBase.NullParameters(),
-        ) where {B}
-        reduction_data = ReductionData(admissible_set, reduction_alg) # Note: reduction_data is the populated reduction_alg.
-        objective = process_objective(objective)
-        return new{typeof(objective), B, typeof(parameters)}(
-            objective,
-            admissible_set,
-            reduction_data,
-            parameters,
-        )
+    function OUQSystem{A, B, P}(
+            objective::A,
+            admissible_set::AdmissibleSet,
+            reduction_data::B,
+            parameters::P,
+        ) where {A <: ObjectiveType, B <: AbstractReductionAlgorithm, P}
+        return new{A, B, P}(objective, admissible_set, reduction_data, parameters)
     end
+end
+
+function OUQSystem(;
+        objective,
+        admissible_set,
+        reduction_alg::AbstractReductionAlgorithm,
+        parameters = SciMLBase.NullParameters(),
+    )
+    reduction_data = ReductionData(admissible_set, reduction_alg) # Note: reduction_data is the populated reduction_alg.
+    # Function barrier: process_objective returns a Union, so build the concretely
+    # parameterized OUQSystem behind a dispatch on the realized objective type.
+    return _OUQSystem(process_objective(objective), admissible_set, reduction_data, parameters)
+end
+
+function _OUQSystem(
+        objective::A,
+        admissible_set::AdmissibleSet,
+        reduction_data::B,
+        parameters::P,
+    ) where {A <: ObjectiveType, B <: AbstractReductionAlgorithm, P}
+    return OUQSystem{A, B, P}(objective, admissible_set, reduction_data, parameters)
 end
 
 objective(ouq_sys::OUQSystem) = ouq_sys.objective
 random_variable_map(ouq_sys::OUQSystem) = ouq_sys.admissible_set.random_variable_map
 constraints_map(ouq_sys::OUQSystem) = ouq_sys.reduction_data.constraints_map
-raw_moments_map(ouq_sys::OUQSystem) =
-    ouq_sys.reduction_data isa StengerCanonicalMoments ?
-    ouq_sys.reduction_data.raw_moments_map : nothing
-p_free_map(ouq_sys::OUQSystem) =
-    ouq_sys.reduction_data isa StengerCanonicalMoments ? ouq_sys.reduction_data.p_free_map :
-    nothing
+# Dispatch on the (concretely typed) reduction_data so the accessors stay type
+# stable: a StengerCanonicalMoments system returns its dict, anything else nothing.
+raw_moments_map(ouq_sys::OUQSystem) = raw_moments_map(ouq_sys.reduction_data)
+raw_moments_map(reduction_data::StengerCanonicalMoments) = reduction_data.raw_moments_map
+raw_moments_map(::AbstractReductionAlgorithm) = nothing
+p_free_map(ouq_sys::OUQSystem) = p_free_map(ouq_sys.reduction_data)
+p_free_map(reduction_data::StengerCanonicalMoments) = reduction_data.p_free_map
+p_free_map(::AbstractReductionAlgorithm) = nothing
 
 
 function get_group_name(var, admissible_set::AdmissibleSet)

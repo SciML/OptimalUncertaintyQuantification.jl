@@ -370,8 +370,8 @@ function construct_optimization_problem(
         oracle_or_symbolic::Symbolic;
         kwargs...,
     )
-    @debug "Objective: $objective.objective"
     objective = ouq_sys.objective
+    @debug "Objective: $(objective._obj)"
     extract_condition_rule = @rule ℙ(~condition) => ~condition
     condition = Symbolics.simplify(objective._obj; rewriter = extract_condition_rule)
     _discrete_measure_map =
