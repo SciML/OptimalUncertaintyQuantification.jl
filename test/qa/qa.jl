@@ -1,12 +1,12 @@
-using OptimalUncertaintyQuantification
-using Aqua
-using JET
-using Test
+using SciMLTesting, OptimalUncertaintyQuantification, JET, Test
 
-@testset "Aqua" begin
-    Aqua.test_all(OptimalUncertaintyQuantification)
-end
-
-@testset "JET" begin
-    JET.test_package(OptimalUncertaintyQuantification; target_defined_modules = true)
-end
+run_qa(
+    OptimalUncertaintyQuantification;
+    explicit_imports = true,
+    ei_kwargs = (;
+        # `@reexport using OUQBase` necessarily brings the `OUQBase` module name into
+        # scope; that re-export is the umbrella package's whole purpose, so the module
+        # name is not a genuine implicit-import to clean up.
+        no_implicit_imports = (; ignore = (:OUQBase,)),
+    ),
+)

@@ -1,14 +1,16 @@
 module CanonicalMoments
 
-using Polynomials, LinearAlgebra, RecurrenceRelationships, Reexport
+using Polynomials: Polynomials, AbstractPolynomial, Polynomial, coeffs
+using LinearAlgebra: LinearAlgebra, SymTridiagonal
+using RecurrenceRelationships: forwardrecurrence
+using Reexport: @reexport
 
 @reexport using DiscreteMeasures
 
-import Base: isapprox, inv, denominator, numerator
+import Base: isapprox, denominator, numerator
 import Statistics: mean
 import LinearAlgebra: issymmetric
 import DiscreteMeasures: support, weights
-import Polynomials: denominator, numerator
 
 function DEFAULT_ROOT_SOLVER(C, args...; kwargs...)
     return if length(C) == 3      # 2nd order
