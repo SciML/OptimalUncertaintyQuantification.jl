@@ -9,25 +9,26 @@ run_qa(
     ei_kwargs = (;
         # Names re-exported by Symbolics but owned by SymbolicUtils.
         all_explicit_imports_via_owners = (; ignore = (:BasicSymbolic, :Term, :symtype)),
-        # Non-public names of upstream packages, used through their (currently
-        # non-`public`-declared) re-exports; drop each as the upstream marks it public.
-        #   :Operator/:Term/:symtype/:value/:wrap/:BasicSymbolic - Symbolics/SymbolicUtils
+        # Non-public names of upstream packages used through their re-exports. These
+        # remain non-public in the versions OUQBase resolves (Symbolics 6.x,
+        # SciMLBase 2.x, SymbolicUtils 3.x, ModelingToolkit 9.x); the public
+        # declarations only landed in later majors that OUQBase's [compat] excludes.
+        #   :BasicSymbolic/:Operator/:Term/:symtype/:value - Symbolics
         all_explicit_imports_are_public = (;
-            ignore = (:BasicSymbolic, :Operator, :Term, :symtype, :value, :wrap),
+            ignore = (:BasicSymbolic, :Operator, :Term, :symtype, :value),
         ),
         # Non-public qualified accesses into upstream packages (and own monorepo
-        # siblings), pending those names being declared `public`:
+        # siblings); still non-public in the resolved upstream majors:
         #   :AbstractSupportAlg/:AbstractWeightAlg - CanonicalMoments (sibling)
         #   :BasicSymbolic/:isbinop/:promote_symtype                 - SymbolicUtils
-        #   :evaluate/:geq/:leq/:wrap                                - Symbolics
+        #   :evaluate/:geq/:leq                                      - Symbolics
         #   :getdefault                                              - ModelingToolkit
         #   :NoAD/:NullParameters                                    - SciMLBase
-        #   :remove_linenums!                                        - Base
         all_qualified_accesses_are_public = (;
             ignore = (
                 :AbstractSupportAlg, :AbstractWeightAlg, :BasicSymbolic, :NoAD,
                 :NullParameters, :evaluate, :geq, :getdefault, :isbinop, :leq,
-                :promote_symtype, :remove_linenums!, :wrap,
+                :promote_symtype,
             ),
         ),
     ),
