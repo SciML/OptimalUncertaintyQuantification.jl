@@ -1,5 +1,3 @@
-using SciMLBase
-
 macro random_variables(block)
     lines = block isa Expr && block.head === :block ? block.args : [block]
     Base.remove_linenums!(block)

@@ -1,12 +1,12 @@
-using CanonicalMoments
-using Aqua
-using JET
-using Test
+using SciMLTesting, CanonicalMoments, JET, Test
 
-@testset "Aqua" begin
-    Aqua.test_all(CanonicalMoments)
-end
-
-@testset "JET" begin
-    JET.test_package(CanonicalMoments; target_defined_modules = true)
-end
+run_qa(
+    CanonicalMoments;
+    explicit_imports = true,
+    ei_kwargs = (;
+        # `@reexport using DiscreteMeasures` necessarily brings the `DiscreteMeasures`
+        # module name (and its `DiscreteMeasure` export, used here) implicitly; the
+        # re-export is intentional, so these are not implicit-imports to clean up.
+        no_implicit_imports = (; ignore = (:DiscreteMeasures, :DiscreteMeasure)),
+    ),
+)

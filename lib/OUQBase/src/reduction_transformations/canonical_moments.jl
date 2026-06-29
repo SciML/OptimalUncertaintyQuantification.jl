@@ -1,14 +1,3 @@
-using CanonicalMoments
-using OrderedCollections
-using ModelingToolkit
-
-import SymbolicUtils.Rewriters: Chain
-import Symbolics: wrap
-import CanonicalMoments: RawMomentSequence
-
-using SciMLBase
-
-
 function get_raw_moment_order(equation::Union{Equation, Inequality}, random_var::Num)
     remove_expectation_rule = @rule 𝔼(~f) => ~f
     extract_moment_rule = @rule ^(~base, ~exponent) => ~exponent
@@ -271,7 +260,7 @@ function construct_optimization_problem(
             (rand_var_vec) ->
         substitute(~f, Dict(constituent_random_variables .=> rand_var_vec))
         # QN: Will variables always be passed in right order? Should be correct since this order is preserved in getting the induced_discrete_measure.
-        ouq_obj_f = simplify(obj_expression; rewriter = extract_f_rule)
+        ouq_obj_f = Symbolics.simplify(obj_expression; rewriter = extract_f_rule)
     else
         error("Objective is not a ProbabilityObjective or ExpectationObjective")
     end

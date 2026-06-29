@@ -1,6 +1,6 @@
 module OptimalUncertaintyQuantification
 
-using Reexport
+using Reexport: @reexport
 @reexport using OUQBase
 
 end # module
