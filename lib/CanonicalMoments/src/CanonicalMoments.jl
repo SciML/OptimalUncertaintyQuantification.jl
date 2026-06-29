@@ -4,6 +4,7 @@ using Polynomials: Polynomials, AbstractPolynomial, Polynomial, coeffs
 using LinearAlgebra: LinearAlgebra, SymTridiagonal
 using RecurrenceRelationships: forwardrecurrence
 using Reexport: @reexport
+using SciMLPublic: @public
 
 @reexport using DiscreteMeasures
 
@@ -49,6 +50,9 @@ export StieltjesTransform, denominator, numerator
 include("measure_transform_algs.jl")
 export PolyRootsSupportAlg, EigvalSupportAlg
 export LinearSolveWeightAlg, PolyWeightAlg, EigvecWeightAlg
+# Documented supertypes of the support/weight algorithms; part of the public API
+# (used as the `support_alg`/`weight_alg` field types downstream) but not exported.
+@public AbstractSupportAlg, AbstractWeightAlg
 
 include("measure_transforms.jl")
 export DiscreteMeasureTransform1

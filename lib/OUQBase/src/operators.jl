@@ -1,5 +1,5 @@
-import Symbolics: Operator, Term, Num, symtype, value
-using SymbolicUtils
+import Symbolics: Operator, value
+import SymbolicUtils: Term, symtype
 
 struct 𝔼_ <: Operator end
 

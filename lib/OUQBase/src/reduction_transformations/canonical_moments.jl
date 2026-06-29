@@ -1,14 +1,3 @@
-using CanonicalMoments
-using OrderedCollections
-using ModelingToolkit
-
-import SymbolicUtils.Rewriters: Chain
-import Symbolics: wrap
-import CanonicalMoments: RawMomentSequence
-
-using SciMLBase
-
-
 function get_raw_moment_order(equation::Union{Equation, Inequality}, random_var::Num)
     remove_expectation_rule = @rule 𝔼(~f) => ~f
     extract_moment_rule = @rule ^(~base, ~exponent) => ~exponent
