@@ -11,7 +11,7 @@ IntervalArithmeticExt = "IntervalArithmetic"
 
 [compat]
 julia = "1.10"
-IntervalArithmetic = "0.16 - 0.20, =0.20.9"
+IntervalArithmetic = "0.16 - 0.20, =0.20.9, 1.0"
 Pkg = "1.10"
 SafeTestsets = "0.1"
 Test = "1.10"
