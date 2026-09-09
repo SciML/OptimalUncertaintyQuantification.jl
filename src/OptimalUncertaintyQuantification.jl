@@ -3,7 +3,7 @@ module OptimalUncertaintyQuantification
 using Reexport: @reexport
 @reexport using OUQBase
 # `@random_variables` expands to `Symbolics.@variables` in the caller scope.
-@reexport using Symbolics
+import Symbolics
 
 using PrecompileTools: @compile_workload, @setup_workload
 

@@ -1,4 +1,5 @@
 using OptimalUncertaintyQuantification
+import Symbolics
 using Test
 
 @testset "Umbrella module loads" begin
