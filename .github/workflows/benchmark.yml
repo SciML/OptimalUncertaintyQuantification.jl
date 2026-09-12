@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ["1", "lts"]
+        version: ["1"]
     env:
       # Force consistent Julia depot path for self-hosted runners
       JULIA_DEPOT_PATH: ~/.julia
