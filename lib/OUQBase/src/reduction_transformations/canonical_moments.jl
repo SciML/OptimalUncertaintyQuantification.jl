@@ -205,7 +205,11 @@ function construct_optimization_problem(
     if isa(ouq_sys.objective, ProbabilityObjective)
         extract_condition_rule = @rule ℙ(~condition) => ~condition
         condition = substitute(
-            Symbolics.simplify(ouq_sys.objective._obj; rewriter = extract_condition_rule),
+            boolean_probability_event(
+                Symbolics.simplify(
+                    ouq_sys.objective._obj; rewriter = extract_condition_rule
+                ),
+            ),
             parammap,
         )
         obj_expression = condition # See note above

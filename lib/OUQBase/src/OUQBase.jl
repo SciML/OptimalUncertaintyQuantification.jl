@@ -2,7 +2,7 @@ module OUQBase
 using ModelingToolkit: ModelingToolkit, @named, OptimizationSystem, get_variables,
     getbounds, parameters, structural_simplify, unknowns
 using ModelingToolkitBase: ModelingToolkitBase
-using Symbolics: Symbolics, Equation, Inequality, Num, wrap
+using Symbolics: Symbolics, Equation, Inequality, Num, wrap, ≲, ≳
 using SymbolicUtils: SymbolicUtils, BasicSymbolic, @rule, substitute
 using TermInterface: arguments, iscall, operation
 using OrderedCollections: OrderedCollections, OrderedDict

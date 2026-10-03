@@ -67,3 +67,25 @@ end
         )
     end
 end
+
+# ≲/≳ build Inequality objects; map them to Bool comparisons before evaluate.
+@testset "boolean_probability_event" begin
+    @variables H h
+    ge = OUQBase.boolean_probability_event(H ≳ h)
+    le = OUQBase.boolean_probability_event(H ≲ h)
+    @test isequal(ge, H >= h)
+    @test isequal(le, H <= h)
+    # Already-Bool comparisons pass through.
+    @test isequal(OUQBase.boolean_probability_event(H > h), H > h)
+    d = Dict(H => 2.2, h => 2.0)
+    @test Symbolics.evaluate(substitute(ge, Dict(h => 2.0)), Dict(H => 2.2)) == true
+    # Flood-shaped non-literal expression: Inequality stays as isless; Bool form folds.
+    @variables Q Ks Zv Zm
+    Hx = (Q / (300 * Ks * sqrt((Zm - Zv) / 5000)))^(3 / 5)
+    ineq = substitute(Hx ≳ h, Dict(h => 2.0))
+    bool = OUQBase.boolean_probability_event(ineq)
+    dq = Dict(Q => 1000.0, Ks => 30.0, Zv => 50.0, Zm => 54.5)
+    unfolded = Symbolics.evaluate(ineq, dq)
+    @test occursin("isless", sprint(show, unfolded))
+    @test Symbolics.evaluate(bool, dq) == true
+end

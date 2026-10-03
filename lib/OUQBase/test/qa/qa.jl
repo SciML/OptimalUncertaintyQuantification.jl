@@ -24,13 +24,14 @@ run_qa(
         # Non-public qualified accesses into upstream packages; still non-public in the
         # resolved upstream majors:
         #   :BasicSymbolic/:isbinop/:promote_symtype - SymbolicUtils
-        #   :evaluate/:geq/:leq                      - Symbolics
+        #   :evaluate                                - Symbolics
         #   :NoAD/:NullParameters                    - SciMLBase
         # getdefault is accessed via its owner ModelingToolkitBase (public there).
+        # Inequality leq/geq discrimination uses public ≲/≳ constructors' relational_op.
         all_qualified_accesses_are_public = (;
             ignore = (
-                :BasicSymbolic, :NoAD, :NullParameters, :evaluate, :geq,
-                :isbinop, :leq, :promote_symtype,
+                :BasicSymbolic, :NoAD, :NullParameters, :evaluate,
+                :isbinop, :promote_symtype,
             ),
         ),
     ),
