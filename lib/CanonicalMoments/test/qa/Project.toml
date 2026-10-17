@@ -14,7 +14,7 @@ DiscreteMeasures = {path = "../../../DiscreteMeasures"}
 Aqua = "0.8"
 CanonicalMoments = "0.1"
 DiscreteMeasures = "0.1"
-JET = "0.9, 0.10, 0.11"
+JET = "0.9, 0.10, 0.11, 0.12"
 SciMLTesting = "2"
 Test = "1"
 julia = "1.10"
